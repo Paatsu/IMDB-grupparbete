@@ -44,3 +44,9 @@ Feature: Navigation
     Given that I've clicked the menu button
     When I click on Top Rated Moved
     Then I should be presented with a list of the Top Rated Movies
+
+  Scenario: Navigate to find the lowest rated movie
+    Given that I've clicked the menu button
+    When I click on "Top Rated Movies"
+    And I click on "Lowest Rated Movies" on IMDb Charts menu
+    Then I should find the lowest rated movie at rank number 1
