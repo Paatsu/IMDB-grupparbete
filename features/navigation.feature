@@ -2,6 +2,9 @@ Feature: Navigation
 
   General navigation on page using clickable elements and changing any concurrent options
 
+  Background:
+    Given that I am on the IMDB site
+
   Scenario: Looking at a poll result without voting and changing between votes and percentage
     Given I have clicked on the main "Menu"
     And have clicked "Polls" under Community
@@ -30,3 +33,14 @@ Feature: Navigation
     Given I am on the start page
     And have clicked movie number 1 through 30 (from left to right) in the "Fav Favorite" scroller
     Then those movies summary pages should load
+
+  Scenario: Finding a years Oscars Winners
+    Given that I've clicked the menu button
+    When I click on Oscars under Awards & Events
+    And I click on a year
+    Then that years page of Oscars winners should be showing
+
+  Scenario: Browsing the Top Rated Movies
+    Given that I've clicked the menu button
+    When I click on Top Rated Moved
+    Then I should be presented with a list of the Top Rated Movies
