@@ -10,5 +10,16 @@ Feature: Using Advanced search to find ...
     And the "Most Popular Anime Movies and TV Shows" has loaded
     And the "Keyword" corresponding to selected keyword is checked in the "Refine" options (filter)
     When clicking "Genres" under "Refine" options (filter) and "Comedy"
-    And resulting titles are sorted by "Popularity" or "Number of Votes"
+    And resulting titles are sorted by "Popularity" ascending
     Then "One Punch Man" should be among the top 5 results on that page
+
+  Scenario: Advanced search for the movie Face-Off by "Same People" collaboration
+    Given I have clicked on the "All" button beside the top search field on any page
+    And clicked "Search Collaborations"
+    And entered "John Tr" in the "Name 1" input field
+    And clicked on suggested option "John Travolta (I)"
+    And entered "Nicolas Ca" in the "Name 2" input field
+    And clicked on suggested option "Nicolas Cage"
+    When clicking "SEARCH" button
+    And resulting titles are sorted by "Popularity" ascending
+    Then the movie "Face/Off" should be the top search result
