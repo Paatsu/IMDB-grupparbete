@@ -39,3 +39,8 @@ Feature: Navigation
     When I click on Oscars under Awards & Events
     And I click on a year
     Then that years page of Oscars winners should be showing
+
+  Scenario: Browsing the Top Rated Movies
+    Given that I've clicked the menu button
+    When I click on Top Rated Moved
+    Then I should be presented with a list of the Top Rated Movies
