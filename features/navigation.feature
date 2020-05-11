@@ -29,4 +29,4 @@ Feature: Navigation
   Scenario: Browsing and clicking movies listed in Fan Favorite scroller on startpage
     Given I am on the start page
     And have clicked movie number 1 through 30 (from left to right) in the "Fav Favorite" scroller
-    Then that movies summary page should load
+    Then those movies summary pages should load
