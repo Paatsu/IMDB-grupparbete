@@ -30,3 +30,9 @@ Feature: Navigation
     Given I am on the start page
     And have clicked movie number 1 through 30 (from left to right) in the "Fav Favorite" scroller
     Then those movies summary pages should load
+
+  Scenario: Finding a years Oscars Winners
+    Given that I've clicked the menu button
+    When I click on Oscars under Awards & Events
+    And I click on a year
+    Then that years page of Oscars winners should be showing
