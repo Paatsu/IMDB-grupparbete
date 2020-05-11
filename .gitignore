@@ -4,3 +4,7 @@ credentials.json
 reports/*.json
 reports/*.html
 reports/*.xml
+package.json
+package-lock.json
+.gitignore
+package.json
