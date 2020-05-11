@@ -2,6 +2,9 @@ Feature: Navigation
 
   General navigation on page using clickable elements and changing any concurrent options
 
+  Background:
+    Given that I am on the IMDB site
+
   Scenario: Looking at a poll result without voting and changing between votes and percentage
     Given I have clicked on the main "Menu"
     And have clicked "Polls" under Community
