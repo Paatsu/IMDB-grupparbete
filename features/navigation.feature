@@ -13,7 +13,7 @@ Feature: Navigation
   Scenario: Browsing same actor from "Born Today" scroller on start page and via "Born Today" in main menu
     Given I have clicked on any actor listed in the "Born Today" scroller on the start page
     And have reached that actors summary page
-    When I click on the main "Menu" from any page
+    When I click on the main "Menu" from this or any other page
     And have clicked "Born Today"
     And the born today list is sorted by "STARmeter" descending
     Then that actor should be listed in the same order as in the scroller (from left to right) on the start page
