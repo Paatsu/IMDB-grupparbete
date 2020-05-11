@@ -8,7 +8,7 @@ Feature: Navigation
     And have clicked any of the listed Polls
     And have clicked "See results without voting"
     When clicking on any of the bars in the voting results chart
-    Then values in the chart should change from number of votes to percentage
+    Then values in the chart should change from number of votes to percentage or vice versa
 
   Scenario: Browsing same actor from "Born Today" scroller on start page and via "Born Today" in main menu
     Given I have clicked on any actor listed in the "Born Today" scroller on the start page
