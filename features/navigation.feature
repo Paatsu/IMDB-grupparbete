@@ -9,3 +9,12 @@ Feature: Navigation
     And have clicked "See results without voting"
     When clicking on any of the bars in the voting results chart
     Then values in the chart should change from number of votes to percentage
+
+  Scenario: Browsing same actor from "Born Today" scroller on start page and via "Born Today" in main menu
+    Given I have clicked on any actor listed in the "Born Today" scroller on the start page
+    And have reached that actors summary page
+    When I click on the main "Menu" from any page
+    And have clicked "Born Today"
+    And the born today list is sorted by "STARmeter" descending
+    Then that actor should be listed in the same order as in the scroller (from left to right) on the start page
+    And clicking on the same actor in this list should lead to that actors summary page
