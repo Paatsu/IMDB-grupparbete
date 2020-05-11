@@ -2,6 +2,9 @@ Feature: Add a movie to your watchlist
 
   Browsing or searching for movies. Sometimes you want to save a movie to your watchlist
 
+  Background:
+    Given that I am on the IMDB site
+
   Scenario: Add the movie "Bee Movie" to your watchlist
     Given that you are logged in to your IMDB account
     When I enter the search text "Bee Movie"
