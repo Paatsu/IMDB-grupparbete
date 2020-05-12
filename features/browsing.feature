@@ -25,3 +25,11 @@ Feature: Browsing
     When Start to type your When step here Click on the drop-down menu "menu"
     Then click "Celebrity News" 
     Then click on the first article. (5)
+
+#4  
+    Scenario: navigating to Top Rated Indian Movies
+    Given that i am on the IMDB homepage
+    And click Open up the dropdown
+    And click on "india movie spotlight"
+    Then go choice "Top Rated Indian Movies" 
+    Then that click the second one
