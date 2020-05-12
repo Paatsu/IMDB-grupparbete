@@ -5,7 +5,7 @@ Feature: Rating a movie
   Background:
     Given that I am on the IMDB site
     And that you are logged in to your IMDB account
-
+  # 5.1
   Scenario: Rate the movie "Terminator 2"
     When I enter the search text "Terminator 2"
     And click the search button
