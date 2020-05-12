@@ -2,6 +2,7 @@ Feature: Using Advanced search to find ...
 
   Using Advanced search to find given actors, movies, TV-shows or games
 
+  # 2.1
   Scenario: Browsing by keywords from Advanced Search Pages and filtering to find "One Punch Man"
     Given I have clicked on the "All" button beside the top search field on any page
     And have clicked "Keyword" beside "Browse titles by:"
@@ -13,6 +14,7 @@ Feature: Using Advanced search to find ...
     And resulting titles are sorted by "Popularity" ascending
     Then "One Punch Man" should be among the top 5 results on that page
 
+  #2.2
   Scenario: Advanced search for the movie Face-Off by "Same People" collaboration
     Given I have clicked on the "All" button beside the top search field on any page
     And clicked "Search Collaborations"

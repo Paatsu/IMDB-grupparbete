@@ -5,6 +5,7 @@ Feature: Search
   Background:
     Given that I am on the IMDB site
 
+  # 1.1
   Scenario: Finding an actor's/actresses profile
     Given that I have selected the search input field
     And that I have entered "Bruce Willis"
