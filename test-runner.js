@@ -9,7 +9,8 @@ if (whatFeature && !whatFeature.includes('.feature')) {
 
 let toRun = `./node_modules/selenium-cucumber-js/index.js`
 
-process.argv.push('-b', 'firefox')
+process.argv.push('-b', 'firefox') // which browser to use
+process.argv.push('-x', '40000') // 40 second before timeout for tests
 if (whatFeature) {
   process.argv.push('-f', 'features/' + whatFeature);
 }
