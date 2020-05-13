@@ -12,8 +12,3 @@ Feature: Search
     When I have waited for the dropdown results to load
     And I click on the first option on the dropdown
     Then I should be browsing the profile page of "Bruce Willis"
-
-
-
-
-
