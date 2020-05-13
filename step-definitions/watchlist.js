@@ -8,12 +8,6 @@ module.exports = function () {
 
   // Scenario: Add the movie "Bee Movie" to your watchlist
 
-  this.Given(/^that I am on the IMDB site$/, async function () {
-    await helpers.loadPage('https://www.imdb.com');
-    // await sleep(sleepTime);
-
-  });
-
   this.Given(/^that you are logged in to your IMDB account$/, async function () {
 
     // Login to IMDB
