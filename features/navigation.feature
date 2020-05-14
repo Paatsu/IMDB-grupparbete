@@ -50,6 +50,7 @@ Feature: Navigation
     Given that I've clicked the menu button
     When I click on Top Rated Moved
     Then I should be presented with a list of the Top Rated Movies
+    
   # 6.7
   Scenario: Navigate to find the lowest rated movie
     Given that I've clicked the menu button
