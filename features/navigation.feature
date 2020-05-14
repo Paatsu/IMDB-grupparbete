@@ -16,12 +16,12 @@ Feature: Navigation
 
   # 6.2
   Scenario: Browsing same actor from "Born Today" scroller on start page and via "Born Today" in main menu
-    Given I have clicked on any actor listed (at number "X") in the "Born Today" scroller on the start page
+    Given I have clicked on any actor listed in the "Born Today" scroller on the start page
     And have reached that actors summary page
-    When I click on the main "Menu" from this or any other page
+    When I click on the "main menu" from this or any other page
     And have clicked "Born Today" under Celebs
     And the born today list is sorted by "STARmeter" descending
-    Then that actor should be listed in the same order (at number "X") as in the scroller (from left to right) on the start page
+    Then that actor should be listed in the same order as in the scroller (from left to right) on the start page
     And clicking on the same actor in this list should lead to that actors summary page
 
   # 6.3
@@ -50,7 +50,7 @@ Feature: Navigation
     Given that I've clicked the menu button
     When I click on Top Rated Moved
     Then I should be presented with a list of the Top Rated Movies
-    
+
   # 6.7
   Scenario: Navigate to find the lowest rated movie
     Given that I've clicked the menu button

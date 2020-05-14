@@ -134,6 +134,109 @@ module.exports = function () {
   /* 6.2 Scenario: Browsing same actor from "Born Today" scroller on start page and via "Born Today" in main menu */
   /* ------------------------------------------------------------------------------------------------------------ */
 
+  let clickedActor = { scrollerIndex: '', name: '', url: '' };
+
+  this.Given(/^I have clicked on any actor listed in the "([^"]*)" scroller on the start page$/, async function (arg1) {
+
+    let bornTodayScroller = await driver.wait(until.elementLocated(By.css('div.born-today')), 10000);
+    let actorsInScroller = await bornTodayScroller.findElements(By.css('a[href*="/name/"][aria-label*=" "]'));
+
+    clickedActor.scrollerIndex = Math.floor((Math.random() * actorsInScroller.length) + 1);
+    clickedActor.name = await actorsInScroller[clickedActor.scrollerIndex].getAttribute('aria-label');
+    clickedActor.url = await actorsInScroller[clickedActor.scrollerIndex].getAttribute('href');
+
+    await actorsInScroller[clickedActor.scrollerIndex].click();
+
+    sleepEnabled ? await sleep(sleepTime) : '';
+  });
+
+
+  this.Given(/^have reached that actors summary page$/, async function () {
+
+    //console.log(clickedActor);
+
+    let actorPageHeadline = await driver.wait(until.elementLocated(By.css('h1.header > span.itemprop')), 10000).getText();
+
+    expect(actorPageHeadline).to.include(clickedActor.name);
+
+    sleepEnabled ? await sleep(sleepTime) : '';
+  });
+
+
+  this.When(/^I click on the "([^"]*)" from this or any other page$/, async function (value) {
+
+    let menuButton = await driver.wait(until.elementLocated(By.css('label.ipc-button')), 10000);
+
+    //await menuButton.sendKeys(Key.RETURN);
+    await menuButton.click();
+
+    //let menuPanel = await driver.findElement(By.css('div[data-testid="panel"]'));
+    let menuPanel = await driver.wait(until.elementLocated(By.css('div[data-testid="panel"]')), 10000);
+
+    expect(await menuPanel.isDisplayed(),
+      value + ' did not open on click').to.be.true;
+
+    sleepEnabled ? await sleep(sleepTime) : '';
+  });
+
+
+  this.When(/^have clicked "([^"]*)" under Celebs$/, async function (value) {
+
+    let bornTodayLink = await driver.wait(until.elementLocated(By.linkText(value)), 10000);
+
+    await bornTodayLink.sendKeys(Key.RETURN);
+
+    let bornTodayPageHeadline = await driver.wait(until.elementLocated(By.css('#main > div.article > h1.header')), 10000).getText();
+
+    ///et today = new Date();
+    //let headLineStr = 'Birth Month Day of 0' + (parseInt(today.getMonth()) + 1) + '-' + today.getDate();
+    let headLineStr = 'Birth Month Day of';
+
+    expect(bornTodayPageHeadline).to.include(headLineStr,
+      'headline on target page did not contain "' + headLineStr + '"');
+
+    sleepEnabled ? await sleep(sleepTime) : '';
+  });
+
+
+  this.When(/^the born today list is sorted by "([^"]*)" descending$/, async function (arg1) {
+
+    let bornTodayPageHeadline = await driver.wait(until.elementLocated(By.css('#main > div.article > h1.header')), 10000).getText();
+
+    let headLineStr = 'Popularity Ascending';
+
+    expect(bornTodayPageHeadline).to.include(headLineStr,
+      'headline on target page did not contain "' + headLineStr + '"');
+
+    sleepEnabled ? await sleep(sleepTime) : '';
+  });
+
+
+  this.Then(/^that actor should be listed in the same order as in the scroller \(from left to right\) on the start page$/, async function () {
+
+    let bornTodayListing = await driver.wait(until.elementLocated(By.css('div.lister-list')), 10000);
+    let bornTodayLinks = await bornTodayListing.findElements(By.css('h3.lister-item-header > a[href*="/name/"]'));
+
+    let linkUrl = await bornTodayLinks[clickedActor.scrollerIndex].getAttribute('href');
+    let linkName = await bornTodayLinks[clickedActor.scrollerIndex].getText();
+    expect(clickedActor.url).to.include(linkUrl);
+    expect(clickedActor.name).to.include(linkName);
+
+    sleepEnabled ? await sleep(sleepTime) : '';
+  });
+
+
+  this.Then(/^clicking on the same actor in this list should lead to that actors summary page$/, async function () {
+
+    await driver.wait(until.elementLocated(By.linkText(clickedActor.name)), 10000).click();
+
+    let actorPageHeadline = await driver.wait(until.elementLocated(By.css('h1.header > span.itemprop')), 10000).getText();
+
+    expect(actorPageHeadline).to.include(clickedActor.name);
+
+  });
+
+
   /* --------------------------------------------------------------------------------------------------------------- */
   /* 6.3 Scenario: Choosing "Browse TV Show by Genre" from main "Menu" and selecting by "Movie and TV Series Theme"  */
   /* --------------------------------------------------------------------------------------------------------------- */
