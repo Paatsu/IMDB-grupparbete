@@ -23,7 +23,8 @@ module.exports = function () {
     //await menuButton.sendKeys(Key.RETURN);
     await menuButton.click();
 
-    let menuPanel = await driver.findElement(By.css('div[data-testid="panel"]'));
+    //let menuPanel = await driver.findElement(By.css('div[data-testid="panel"]'));
+    let menuPanel = await driver.wait(until.elementLocated(By.css('div[data-testid="panel"]')), 10000);
 
     expect(await menuPanel.isDisplayed(),
       value + ' did not open on click').to.be.true;
@@ -130,7 +131,7 @@ module.exports = function () {
     sleepEnabled ? await sleep(sleepTime) : '';
   });
 
-  
+
   /* ------------------------------------------------------------------------------------------------------------ */
   /* 6.2 Scenario: Browsing same actor from "Born Today" scroller on start page and via "Born Today" in main menu */
   /* ------------------------------------------------------------------------------------------------------------ */
@@ -142,7 +143,7 @@ module.exports = function () {
   /* --------------------------------------------------------------------------------------- */
   /* 6.4 Scenario: Browsing and clicking movies listed in Fan Favorite scroller on startpage */
   /* --------------------------------------------------------------------------------------- */
-  
+
   /* -------------------------------------------- */
   /* 6.5 Scenario: Finding a years Oscars Winners */
   /* -------------------------------------------- */
@@ -163,7 +164,7 @@ module.exports = function () {
     let yearLink = await driver.wait(until.elementLocated(By.linkText(year)));
     assert(yearLink);
     yearLink.click()
-    
+
 
   });
 
@@ -171,7 +172,7 @@ module.exports = function () {
     let titleText = await driver.wait(until.elementLocated(By.css('.event-year-header > div'))).getText();
     expect(titleText).to.include(year + ' Awards', 'The main title of the page should be saying [year] + Awards')
   });
-  
+
   /* ------------------------------------------- */
   /* 6.6 Scenario: Browsing the Top Rated Movies */
   /* ------------------------------------------- */
