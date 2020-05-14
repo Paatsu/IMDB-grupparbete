@@ -1,15 +1,19 @@
-const {username, password} = require('./credentials.json');
-let {$, sleep} = require('./funcs');
+const { username, password } = require('./credentials.json');
+let { $, sleep } = require('./funcs');
 
-module.exports = function() {
+module.exports = function () {
+
+  // Use Gherkin: Given that I am on the IMDB site
 
   this.Given(/^that I am on the IMDB site$/, async function () {
     // .loadPage waits for Body Tag. .get waits for onload
     // await helpers.loadPage('https://imdb.com');
     await driver.get('https://imdb.com');
-  
+
 
   });
+
+  // Use Gherkin: Given that you are logged in to your IMDB account
 
   this.Given(/^that you are logged in to your IMDB account$/, async function () {
 
