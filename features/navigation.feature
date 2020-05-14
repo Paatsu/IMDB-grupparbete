@@ -41,15 +41,17 @@ Feature: Navigation
   # 6.5
   Scenario: Finding a years Oscars Winners
     Given I have clicked on the menu
-    When I click on Oscars under Awards & Events
+    When I click on "Oscars"
     And I click on "1997"
     Then the "1997" page of Oscars winners should be showing
 
   # 6.6
-  Scenario: Browsing the Top Rated Movies
-    Given that I've clicked the menu button
-    When I click on Top Rated Moved
-    Then I should be presented with a list of the Top Rated Movies
+    Scenario: Find the Top Rated Movie
+    Given I have clicked on the menu
+    When I click on "Top Rated Movies"
+    And I am presented with a list of the Top Rated Movies
+    And I click the first movie
+    Then I should be on the top rated movie's page
     
   # 6.7
   Scenario: Navigate to find the lowest rated movie
