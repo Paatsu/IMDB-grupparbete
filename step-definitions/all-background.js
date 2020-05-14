@@ -4,8 +4,10 @@ let {$, sleep} = require('./funcs');
 module.exports = function() {
 
   this.Given(/^that I am on the IMDB site$/, async function () {
-    
-    await helpers.loadPage('https://imdb.com');
+    // .loadPage waits for Body Tag. .get waits for onload
+    // await helpers.loadPage('https://imdb.com');
+    await driver.get('https://imdb.com');
+  
 
   });
 
