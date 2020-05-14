@@ -41,7 +41,7 @@ Feature: Navigation
   # 6.5
   Scenario: Finding a years Oscars Winners
     Given I have clicked on the menu
-    When I click on Oscars under Awards & Events
+    When I click on "Oscars"
     And I click on "1997"
     Then the "1997" page of Oscars winners should be showing
 

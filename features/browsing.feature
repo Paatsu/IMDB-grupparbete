@@ -7,8 +7,12 @@ Feature: Browsing
     Given that I am on the IMDB site
 
   # 3.1
-  Scenario: Finding an actors profile
-    Given that I'm browsing an actors profile
+  Scenario: Finding all actors born the same date as an actor/actress
+    Given that I have selected the search input field
+    And that I have entered "Winona Ryder"
+    When I have waited for the dropdown results to load
+    And I click on the first option on the dropdown
+    Then I should be browsing the profile page of "Winona Ryder"
     When I click on their birthdate
     Then I should be shown a list of all actors born the same date
 

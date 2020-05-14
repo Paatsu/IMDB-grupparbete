@@ -14,6 +14,8 @@ module.exports = function () {
   let sleepEnabled = false;
   let sleepTime = 0;
 
+  let firstMovie;
+
   this.Given(/^I have clicked on the "([^"]*)"$/, async function (value) {
 
     let menuButton = await driver.wait(until.elementLocated(By.css('label.ipc-button')), 10000);
@@ -261,17 +263,7 @@ module.exports = function () {
 
   });
 
-  this.When(/^I click on Oscars under Awards & Events$/, async function () {
-    // Write code here that turns the phrase above into concrete actions
-    let oscarsLink = await driver.wait(until.elementLocated(By.linkText('Oscars')));
-    await oscarsLink.click();
-    let titleText = await driver.wait(until.elementLocated(By.css('.nav-heading-frame > div > a > h1'))).getText();
-    expect(titleText).to.equals('OSCARS', 'The main title of the page should be OSCARS')
-
-  });
-
   this.When(/^I click on "([^"]*)"$/, async function (year) {
-    // Write code here that turns the phrase above into concrete actions
     let yearLink = await driver.wait(until.elementLocated(By.linkText(year)));
     assert(yearLink);
     yearLink.click()
@@ -280,7 +272,6 @@ module.exports = function () {
   });
 
   this.Then(/^the "([^"]*)" page of Oscars winners should be showing$/, async function (year) {
-    // Write code here that turns the phrase above into concrete actions
     let titleText = await driver.wait(until.elementLocated(By.css('.event-year-header > div'))).getText();
     expect(titleText).to.include(year + ' Awards', 'The main title of the page should be saying [year] + Awards')
   });
@@ -288,6 +279,26 @@ module.exports = function () {
   /* ------------------------------------------- */
   /* 6.6 Scenario: Browsing the Top Rated Movies */
   /* ------------------------------------------- */
+
+  this.When(/^I am presented with a list of the Top Rated Movies$/, async function () {
+    let topMovieList = await driver.wait(until.elementLocated(By.css('table[data-caller-name="chart-top250movie"]')));
+    assert(topMovieList, "The top movie list is not loaded");
+  });
+
+  this.When(/^I click the first movie$/, async function () {
+    firstMovie = await driver.wait(until.elementLocated(By.css('.titleColumn > a'))).getText();
+    await driver.wait(until.elementLocated(By.linkText(firstMovie))).click();
+    
+  });
+
+  this.Then(/^I should be on the top rated movie's page$/, async function () {
+    // This checks the title of the page is the same as the title of the movie link you clicked
+    let pageTitle = await driver.wait(until.elementLocated(By.css('.title_wrapper > h1'))).getText();
+    assert.include(pageTitle, firstMovie, "You're not browsing the movie you clicked on's page");
+    //This check the current rating of the movie of the current page
+    let articleBoxInfo = await driver.wait(until.elementLocated(By.css('.article.highlighted'))).getText();
+    assert.include(articleBoxInfo, "Top Rated Movies #1", "You're not browsing the #1 movies page");
+  });
 
   /* ----------------------------------------------------- */
   /* 6.7 Scenario: Navigate to find the lowest rated movie */
