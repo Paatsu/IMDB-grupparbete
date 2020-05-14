@@ -5,11 +5,11 @@ Feature: Navigation
   Background:
     Given that I am on the IMDB site
 
-  # 6.1 
+  # 6.1
   Scenario: Looking at a poll result without voting and changing between votes and percentage
-    Given I have clicked on the main "Menu"
+    Given I have clicked on the "main menu"
     And have clicked "Polls" under Community
-    And have clicked any of the listed Polls
+    And have clicked on any listed poll
     And have clicked "See results without voting"
     When clicking on any of the bars in the voting results chart
     Then values in the chart should change from number of votes to percentage or vice versa
