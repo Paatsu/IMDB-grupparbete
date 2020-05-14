@@ -4,14 +4,6 @@ module.exports = function() {
 
   let sleepTime = 0;
   let searchField;
- 
-  // Background
-  this.Given(/^that I am on the IMDB site$/, async function () {
-    
-    await helpers.loadPage('https://imdb.com');
-    await sleep(0)
-
-  });
 
   // 1.1
   this.Given(/^that I have selected the search input field$/, async function() {
