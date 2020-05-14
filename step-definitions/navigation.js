@@ -18,7 +18,8 @@ module.exports = function () {
 
     let menuButton = await driver.wait(until.elementLocated(By.css('label.ipc-button')), 10000);
 
-    await menuButton.sendKeys(Key.RETURN);
+    //await menuButton.sendKeys(Key.RETURN);
+    await menuButton.click();
 
     let menuPanel = await driver.findElement(By.css('div[data-testid="panel"]'));
 
@@ -61,7 +62,7 @@ module.exports = function () {
   });
 
 
-  this.Given(/^have clicked "([^"]*)"$/, async function (value) {
+  this.Given(/^have clicked "([^"]*)" on poll page$/, async function (value) {
 
     let noVoteLink = await driver.wait(until.elementLocated(By.css('.article > .results > a[href*="poll"]')), 10000);
 

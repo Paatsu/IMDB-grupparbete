@@ -10,7 +10,7 @@ Feature: Navigation
     Given I have clicked on the "main menu"
     And have clicked "Polls" under Community
     And have clicked on any listed poll
-    And have clicked "See results without voting"
+    And have clicked "See results without voting" on poll page
     When clicking on any of the bars in the voting results chart
     Then values in the chart should change from number of votes to percentage or vice versa
 
@@ -19,7 +19,7 @@ Feature: Navigation
     Given I have clicked on any actor listed (at number "X") in the "Born Today" scroller on the start page
     And have reached that actors summary page
     When I click on the main "Menu" from this or any other page
-    And have clicked "Born Today"
+    And have clicked "Born Today" under Celebs
     And the born today list is sorted by "STARmeter" descending
     Then that actor should be listed in the same order (at number "X") as in the scroller (from left to right) on the start page
     And clicking on the same actor in this list should lead to that actors summary page
