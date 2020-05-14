@@ -6,5 +6,5 @@ reports/*.html
 reports/*.xml
 package.json
 package-lock.json
-.gitignore
-package.json
+step-definitions/rikard-test.js
+features/rikard-temp.feature
