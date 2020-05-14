@@ -40,10 +40,10 @@ Feature: Navigation
 
   # 6.5
   Scenario: Finding a years Oscars Winners
-    Given that I've clicked the menu button
+    Given I have clicked on the menu
     When I click on Oscars under Awards & Events
-    And I click on a year
-    Then that years page of Oscars winners should be showing
+    And I click on "1997"
+    Then the "1997" page of Oscars winners should be showing
 
   # 6.6
   Scenario: Browsing the Top Rated Movies

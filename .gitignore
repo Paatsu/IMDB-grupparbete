@@ -8,3 +8,5 @@ package.json
 package-lock.json
 step-definitions/rikard-test.js
 features/rikard-temp.feature
+features/slask.feature
+step-definitions/slask.js

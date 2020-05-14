@@ -12,7 +12,7 @@ module.exports = function () {
   let voteResults;
 
   let sleepEnabled = false;
-  let sleepTime = 3000;
+  let sleepTime = 0;
 
   this.Given(/^I have clicked on the "([^"]*)"$/, async function (value) {
 
@@ -144,6 +144,42 @@ module.exports = function () {
   /* -------------------------------------------- */
   /* 6.5 Scenario: Finding a years Oscars Winners */
   /* -------------------------------------------- */
+
+  this.Given(/^I have clicked on the menu/, async function () {
+    // Borrowed some of this from Rickards navigation scenario
+    let menuButton = await driver.wait(until.elementLocated(By.css('label.ipc-button')));
+
+    await menuButton.click();
+
+    let menuPanel = await driver.wait(until.elementLocated(By.css('div[data-testid="panel"]')));
+
+    assert(menuPanel);
+
+  });
+
+  this.When(/^I click on Oscars under Awards & Events$/, async function () {
+    // Write code here that turns the phrase above into concrete actions
+    let oscarsLink = await driver.wait(until.elementLocated(By.linkText('Oscars')));
+    await oscarsLink.click();
+    let titleText = await driver.wait(until.elementLocated(By.css('.nav-heading-frame > div > a > h1'))).getText();
+    expect(titleText).to.equals('OSCARS', 'The main title of the page should be OSCARS')
+
+  });
+
+  this.When(/^I click on "([^"]*)"$/, async function (year) {
+    // Write code here that turns the phrase above into concrete actions
+    let yearLink = await driver.wait(until.elementLocated(By.linkText(year)));
+    assert(yearLink);
+    yearLink.click()
+    
+
+  });
+
+  this.Then(/^the "([^"]*)" page of Oscars winners should be showing$/, async function (year) {
+    // Write code here that turns the phrase above into concrete actions
+    let titleText = await driver.wait(until.elementLocated(By.css('.event-year-header > div'))).getText();
+    expect(titleText).to.include(year + ' Awards', 'The main title of the page should be saying [year] + Awards')
+  });
   
   /* ------------------------------------------- */
   /* 6.6 Scenario: Browsing the Top Rated Movies */
