@@ -15,8 +15,9 @@ module.exports = function() {
 
   this.Given(/^that I have entered "([^"]*)"$/, async function (ActorName) {
     
-    searchField.sendKeys(ActorName)
-
+    searchField.sendKeys(ActorName);
+    let searchText = await searchField.getAttribute("value");
+    assert.include(searchText, ActorName, "The searchbar doesn't have the text in it");
   });
 
   this.When(/^I have waited for the dropdown results to load$/, async function() {
