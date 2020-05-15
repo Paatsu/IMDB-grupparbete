@@ -10,8 +10,26 @@ module.exports = function () {
     // await helpers.loadPage('https://imdb.com');
     await driver.get('https://imdb.com');
 
+  });
+
+
+  // Use Gherkin: Given I have clicked on the "main menu"
+
+  this.Given(/^I have clicked on the "([^"]*)"$/, async function (value) {
+
+    let menuButton = await driver.wait(until.elementLocated(By.css('label.ipc-button')), 10000);
+
+    //await menuButton.sendKeys(Key.RETURN);
+    await menuButton.click();
+
+    //let menuPanel = await driver.findElement(By.css('div[data-testid="panel"]'));
+    let menuPanel = await driver.wait(until.elementLocated(By.css('div[data-testid="panel"]')), 10000);
+
+    expect(await menuPanel.isDisplayed(),
+      value + ' did not open on click').to.be.true;
 
   });
+
 
   // Use Gherkin: Given that you are logged in to your IMDB account
 
@@ -40,5 +58,6 @@ module.exports = function () {
     await signinButton.click();
 
   });
+
 
 }
