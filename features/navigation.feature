@@ -53,7 +53,7 @@ Feature: Navigation
 
   # 6.7
   Scenario: Navigate to find the lowest rated movie
-    Given that I've clicked the menu button
-    When I click on "Top Rated Movies"
-    And I click on "Lowest Rated Movies" on IMDb Charts menu
-    Then I should find the lowest rated movie at rank number 1
+    Given I have clicked on the menu
+    And I clicked on "Top Rated Movies"
+    And I clicked on "Lowest Rated Movies" on IMDb Charts menu
+    Then I should find the lowest rated movie "Disaster Movie" at rank number 1
