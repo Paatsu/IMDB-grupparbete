@@ -10,9 +10,8 @@ Feature: Using Advanced search to find ...
     And clicked "anime" on the 'Displaying 200 results for "ani"' page
     And the "Most Popular Anime Movies and TV Shows" has loaded
     And the "Keyword" corresponding to selected keyword is checked in the "Refine" options (filter)
-    When clicking "Genres" under "Refine" options (filter) and "Comedy"
-    And resulting titles are sorted by "Popularity" ascending
-    Then "One Punch Man" should be among the top 5 results on that page
+    When resulting titles are sorted by "Popularity" ascending
+    Then "One Punch Man" should be among the top 50 results on that page
 
   #2.2
   Scenario: Advanced search for the movie Face-Off by "Same People" collaboration
