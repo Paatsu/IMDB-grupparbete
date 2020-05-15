@@ -288,7 +288,7 @@ module.exports = function () {
   this.When(/^I click the first movie$/, async function () {
     firstMovie = await driver.wait(until.elementLocated(By.css('.titleColumn > a'))).getText();
     await driver.wait(until.elementLocated(By.linkText(firstMovie))).click();
-    
+
   });
 
   this.Then(/^I should be on the top rated movie's page$/, async function () {
@@ -303,5 +303,32 @@ module.exports = function () {
   /* ----------------------------------------------------- */
   /* 6.7 Scenario: Navigate to find the lowest rated movie */
   /* ----------------------------------------------------- */
+
+  this.When(/^I clicked on "([^"]*)"$/, async function (linkText) {
+
+    let topRated = await driver.wait(until.elementLocated(By.linkText(linkText)));
+    expect(topRated, 'Could not find the link Top Rated Movies');
+    await topRated.click();
+
+  });
+
+  this.When(/^I clicked on "([^"]*)" on IMDb Charts menu$/, async function (linkText) {
+
+    let lowestRated = await driver.wait(until.elementLocated(By.linkText(linkText)));
+    expect(lowestRated, 'Could not find the link Lowest Rated Movies');
+    await lowestRated.click();
+
+  });
+
+  this.Then(/^I should find the lowest rated movie "([^"]*)" at rank number (\d+)$/, async function (movie, rank) {
+
+    await driver.wait(until.elementLocated(By.css('.chart.full-width')));
+    let results = await $('.titleColumn a');
+    expect(results, 'Could not find any results');
+    let firstResult = results[+rank - 1];
+    let rankedTop = await firstResult.getText();
+    expect(rankedTop).to.equal(movie, 'Could not find ' + movie + ' on the result');
+
+  });
 
 }
