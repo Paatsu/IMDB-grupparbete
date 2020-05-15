@@ -14,8 +14,6 @@ module.exports = function () {
   let sleepEnabled = false;
   let sleepTime = 0;
 
-  let firstMovie;
-
   this.Given(/^have clicked "([^"]*)" under Community$/, async function (value) {
 
     let pollsLink = await driver.wait(until.elementLocated(By.linkText(value)), 10000);
@@ -209,6 +207,7 @@ module.exports = function () {
   });
 
 
+
   /* --------------------------------------------------------------------------------------------------------------- */
   /* 6.3 Scenario: Choosing "Browse TV Show by Genre" from "main menu" and selecting by "Movie and TV Series Theme"  */
   /* --------------------------------------------------------------------------------------------------------------- */
@@ -250,9 +249,11 @@ module.exports = function () {
 
     let themeWidgetLinks = await pageThemeWidget.findElements(By.css('a'));
 
-    let ranIndex = Math.floor((Math.random() * themeWidgetLinks.length) + 1);
+    let ranIndex = Math.floor((Math.random() * themeWidgetLinks.length - 1) + 1);
     clickedTheme = await themeWidgetLinks[ranIndex].getText();
 
+    // I have to sendKeys twice!
+    await themeWidgetLinks[ranIndex].sendKeys(Key.RETURN);
     await themeWidgetLinks[ranIndex].sendKeys(Key.RETURN);
 
     sleepEnabled ? await sleep(sleepTime) : '';
@@ -262,7 +263,7 @@ module.exports = function () {
   this.Given(/^"([^"]*)" list page has loaded$/, async function (value) {
 
     // IMDb replaces "-" with "space" in h1
-    let newValue = value.replace('*clicked theme*', clickedTheme.replace('-', ' '));
+    let newValue = value.replace('*clicked theme*', clickedTheme.split('-').join(' '));
 
     let pageHeadline = await driver.wait(until.elementLocated(By.css('#main > div.article > h1.header')), 25000).getText();
 
@@ -276,7 +277,7 @@ module.exports = function () {
 
   this.Then(/^a "([^"]*)" corresponding to selected theme should be checked in the "([^"]*)" options \(filter\) on that page$/, async function (arg1, arg2) {
 
-    let optionName = clickedTheme.replace(' ', '-').toLowerCase();
+    let optionName = clickedTheme.split(' ').join('-').toLowerCase();
     let option = await driver.wait(until.elementLocated(By.css('input[name="' + optionName + '"]')), 25000)
 
     // Dont need to check this... driver.wait(until...) will cause timeout if not found anyway
@@ -287,9 +288,7 @@ module.exports = function () {
 
     expect(checked, 'option checkbox for ' + clickedTheme + ' was not checked').to.equal('true');
 
-    sleepEnabled ? await sleep(sleepTime) : '';
   });
-
 
   /* --------------------------------------------------------------------------------------- */
   /* 6.4 Scenario: Browsing and clicking movies listed in Fan Favorite scroller on startpage */
