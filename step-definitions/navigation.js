@@ -4,15 +4,15 @@ let { $, sleep } = require('./funcs');
 
 module.exports = function () {
 
+  let sleepEnabled = false;
+  let sleepTime = 3000;
+
   /* ----------------------------------------------------------------------------------------------- */
   /* 6.1 Scenario: Looking at a poll result without voting and changing between votes and percentage */
   /* ----------------------------------------------------------------------------------------------- */
 
   let selectedPollName;
   let voteResults;
-
-  let sleepEnabled = false;
-  let sleepTime = 0;
 
   this.Given(/^have clicked "([^"]*)" under Community$/, async function (value) {
 
@@ -61,8 +61,9 @@ module.exports = function () {
 
   this.When(/^clicking on any of the bars in the voting results chart$/, async function () {
 
-    // span elements are added for 0 vote bars on animation finish
-    await driver.wait(until.elementLocated(By.css('li.answer > div.content > span.count')), 10000);
+    // wait for animation to add a voting number
+    let firstBar = await driver.wait(until.elementLocated(By.css('li.answer > div.content > div.bar')), 10000);
+    await driver.wait(until.elementTextMatches(firstBar, /[0-9]/));
 
     // Collect all voting results content
     voteResults = await driver.findElements(By.css('li.answer > div.content'));
@@ -121,7 +122,7 @@ module.exports = function () {
 
   this.Given(/^I have clicked on any actor listed in the "([^"]*)" scroller on the start page$/, async function (arg1) {
 
-    let bornTodayScroller = await driver.wait(until.elementLocated(By.css('div.born-today')), 10000);
+    let bornTodayScroller = await driver.wait(until.elementLocated(By.css('div.born-today')), 25000);
     let actorsInScroller = await bornTodayScroller.findElements(By.css('a[href*="/name/"][aria-label*=" "]'));
 
     clickedActor.scrollerIndex = Math.floor((Math.random() * actorsInScroller.length) + 1);
@@ -207,7 +208,6 @@ module.exports = function () {
   });
 
 
-
   /* --------------------------------------------------------------------------------------------------------------- */
   /* 6.3 Scenario: Choosing "Browse TV Show by Genre" from "main menu" and selecting by "Movie and TV Series Theme"  */
   /* --------------------------------------------------------------------------------------------------------------- */
@@ -251,11 +251,13 @@ module.exports = function () {
 
     let ranIndex = Math.floor(Math.random() * themeWidgetLinks.length);
     clickedTheme = await themeWidgetLinks[ranIndex].getText();
-
     // sendKeys on this webelement list item stops working when running all scenarios
-    //await themeWidgetLinks[ranIndex].sendKeys(Key.RETURN);
-    // So picking up the element again via linkText and sending return
-    await driver.findElement(By.linkText(clickedTheme)).sendKeys(Key.RETURN);
+
+    // Need this delay. Do not know why click below doesnt register
+    await sleep(3000);
+
+    await themeWidgetLinks[ranIndex].sendKeys(Key.RETURN);
+    //await driver.findElement(By.linkText(clickedTheme)).click();
 
     sleepEnabled ? await sleep(sleepTime) : '';
   });
