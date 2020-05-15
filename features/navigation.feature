@@ -27,9 +27,9 @@ Feature: Navigation
   # 6.3
   Scenario: Choosing "Browse TV Show by Genre" from main "Menu" and selecting by "Movie and TV Series Theme"
     Given I have clicked on the "main menu"
-    And have clicked "Browse TV Show by Genre" under TV Shows
+    And have clicked "Browse TV Shows by Genre" under TV Shows
     And have clicked a theme under "Movie and TV Series Themes"
-    And "Most Popular Anime Movies and TV Shows" list page has loaded
+    And "Most Popular *clicked theme* Movies and TV Shows" list page has loaded
     Then a "Keyword" corresponding to selected theme should be checked in the "Refine" options (filter) on that page
 
   # 6.4

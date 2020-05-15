@@ -205,12 +205,91 @@ module.exports = function () {
     expect(actorPageHeadline).to.include(clickedActor.name,
       'headline on target page did not contain "' + clickedActor.name + '"');
 
+    sleepEnabled ? await sleep(sleepTime) : '';
   });
 
 
   /* --------------------------------------------------------------------------------------------------------------- */
-  /* 6.3 Scenario: Choosing "Browse TV Show by Genre" from main "Menu" and selecting by "Movie and TV Series Theme"  */
+  /* 6.3 Scenario: Choosing "Browse TV Show by Genre" from "main menu" and selecting by "Movie and TV Series Theme"  */
   /* --------------------------------------------------------------------------------------------------------------- */
+
+  let clickedTheme;
+
+  this.Given(/^have clicked "([^"]*)" under TV Shows$/, async function (value) {
+
+    let tvShowsLink = await driver.wait(until.elementLocated(By.linkText(value)), 10000);
+
+    await tvShowsLink.sendKeys(Key.RETURN);
+
+    sleepEnabled ? await sleep(sleepTime) : '';
+  });
+
+
+  this.Given(/^have clicked a theme under "([^"]*)"$/, async function (value) {
+
+    await driver.wait(until.elementLocated(By.css('.ab_widget')), 10000);
+
+    // Collect widgets sections
+    let pageWidgets = await driver.findElements(By.css('.ab_widget'));
+
+    let pageThemeWidget;
+    for (let widget of pageWidgets) {
+      let check = await widget.findElements(By.css('h3'));
+      if (check.length) {
+        let title = await widget.findElement(By.css('h3')).getText();
+        if (title.includes(value)) {
+          pageThemeWidget = widget;
+          break;
+        }
+      }
+    }
+
+    // Lets check to get the assertion error if undefined at this point
+    expect(pageThemeWidget).to.be.an.instanceOf(WebElement,
+      value + ' links was not found');
+
+    let themeWidgetLinks = await pageThemeWidget.findElements(By.css('a'));
+
+    let ranIndex = Math.floor((Math.random() * themeWidgetLinks.length) + 1);
+    clickedTheme = await themeWidgetLinks[ranIndex].getText();
+
+    await themeWidgetLinks[ranIndex].sendKeys(Key.RETURN);
+
+    sleepEnabled ? await sleep(sleepTime) : '';
+  });
+
+
+  this.Given(/^"([^"]*)" list page has loaded$/, async function (value) {
+
+    // IMDb replaces "-" with "space" in h1
+    let newValue = value.replace('*clicked theme*', clickedTheme.replace('-', ' '));
+
+    let pageHeadline = await driver.wait(until.elementLocated(By.css('#main > div.article > h1.header')), 25000).getText();
+
+    // Comparing to all lower cases
+    expect(pageHeadline.toLowerCase()).to.include(newValue.toLowerCase(),
+      'headline on target page did not contain "' + newValue.toLowerCase() + '"');
+
+    sleepEnabled ? await sleep(sleepTime) : '';
+  });
+
+
+  this.Then(/^a "([^"]*)" corresponding to selected theme should be checked in the "([^"]*)" options \(filter\) on that page$/, async function (arg1, arg2) {
+
+    let optionName = clickedTheme.replace(' ', '-').toLowerCase();
+    let option = await driver.wait(until.elementLocated(By.css('input[name="' + optionName + '"]')), 25000)
+
+    // Dont need to check this... driver.wait(until...) will cause timeout if not found anyway
+    // expect(option).to.be.an.instanceOf(WebElement,
+    //  'option checkbox for ' + clickedTheme + ' was not found');
+
+    let checked = await option.getAttribute('checked');
+
+    expect(checked, 'option checkbox for ' + clickedTheme + ' was not checked').to.equal('true');
+
+    sleepEnabled ? await sleep(sleepTime) : '';
+  });
+
 
   /* --------------------------------------------------------------------------------------- */
   /* 6.4 Scenario: Browsing and clicking movies listed in Fan Favorite scroller on startpage */
