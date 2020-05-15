@@ -1,4 +1,4 @@
-const { By, Key, until } = require('selenium-webdriver');
+const { WebElement, By, Key, until } = require('selenium-webdriver');
 
 let { $, sleep } = require('./funcs');
 
