@@ -18,7 +18,7 @@ Feature: Navigation
   Scenario: Browsing same actor from "Born Today" scroller on start page and via "Born Today" in main menu
     Given I have clicked on any actor listed in the "Born Today" scroller on the start page
     And have reached that actors summary page
-    When I click on the "main menu" from this or any other page
+    And I have clicked on the "main menu"
     And have clicked "Born Today" under Celebs
     And the born today list is sorted by "STARmeter" descending
     Then that actor should be listed in the same order as in the scroller (from left to right) on the start page
@@ -26,7 +26,7 @@ Feature: Navigation
 
   # 6.3
   Scenario: Choosing "Browse TV Show by Genre" from main "Menu" and selecting by "Movie and TV Series Theme"
-    Given I have clicked on the main "Menu"
+    Given I have clicked on the "main menu"
     And have clicked "Browse TV Show by Genre" under TV Shows
     And have clicked a theme under "Movie and TV Series Themes"
     And "Most Popular Anime Movies and TV Shows" list page has loaded
