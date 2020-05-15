@@ -16,23 +16,6 @@ module.exports = function () {
 
   let firstMovie;
 
-  this.Given(/^I have clicked on the "([^"]*)"$/, async function (value) {
-
-    let menuButton = await driver.wait(until.elementLocated(By.css('label.ipc-button')), 10000);
-
-    //await menuButton.sendKeys(Key.RETURN);
-    await menuButton.click();
-
-    //let menuPanel = await driver.findElement(By.css('div[data-testid="panel"]'));
-    let menuPanel = await driver.wait(until.elementLocated(By.css('div[data-testid="panel"]')), 10000);
-
-    expect(await menuPanel.isDisplayed(),
-      value + ' did not open on click').to.be.true;
-
-    sleepEnabled ? await sleep(sleepTime) : '';
-  });
-
-
   this.Given(/^have clicked "([^"]*)" under Community$/, async function (value) {
 
     let pollsLink = await driver.wait(until.elementLocated(By.linkText(value)), 10000);
@@ -159,24 +142,7 @@ module.exports = function () {
 
     let actorPageHeadline = await driver.wait(until.elementLocated(By.css('h1.header > span.itemprop')), 10000).getText();
 
-    expect(actorPageHeadline).to.include(clickedActor.name);
-
-    sleepEnabled ? await sleep(sleepTime) : '';
-  });
-
-
-  this.When(/^I click on the "([^"]*)" from this or any other page$/, async function (value) {
-
-    let menuButton = await driver.wait(until.elementLocated(By.css('label.ipc-button')), 10000);
-
-    //await menuButton.sendKeys(Key.RETURN);
-    await menuButton.click();
-
-    //let menuPanel = await driver.findElement(By.css('div[data-testid="panel"]'));
-    let menuPanel = await driver.wait(until.elementLocated(By.css('div[data-testid="panel"]')), 10000);
-
-    expect(await menuPanel.isDisplayed(),
-      value + ' did not open on click').to.be.true;
+    expect(actorPageHeadline).to.include(clickedActor.name, 'headline on target page did not contain "' + clickedActor.name + '"');
 
     sleepEnabled ? await sleep(sleepTime) : '';
   });
@@ -190,7 +156,7 @@ module.exports = function () {
 
     let bornTodayPageHeadline = await driver.wait(until.elementLocated(By.css('#main > div.article > h1.header')), 10000).getText();
 
-    ///et today = new Date();
+    //let today = new Date();
     //let headLineStr = 'Birth Month Day of 0' + (parseInt(today.getMonth()) + 1) + '-' + today.getDate();
     let headLineStr = 'Birth Month Day of';
 
@@ -221,8 +187,10 @@ module.exports = function () {
 
     let linkUrl = await bornTodayLinks[clickedActor.scrollerIndex].getAttribute('href');
     let linkName = await bornTodayLinks[clickedActor.scrollerIndex].getText();
-    expect(clickedActor.url).to.include(linkUrl);
-    expect(clickedActor.name).to.include(linkName);
+    expect(clickedActor.url).to.include(linkUrl,
+      'no (name) match was found on born today page for the actor' + clickedActor.name + 'clicked in born today scroller');
+    expect(clickedActor.name).to.include(linkName,
+      'no (url) match was found on born today page for the actor' + clickedActor.name + 'clicked in born today scroller');
 
     sleepEnabled ? await sleep(sleepTime) : '';
   });
@@ -234,7 +202,8 @@ module.exports = function () {
 
     let actorPageHeadline = await driver.wait(until.elementLocated(By.css('h1.header > span.itemprop')), 10000).getText();
 
-    expect(actorPageHeadline).to.include(clickedActor.name);
+    expect(actorPageHeadline).to.include(clickedActor.name,
+      'headline on target page did not contain "' + clickedActor.name + '"');
 
   });
 
@@ -288,7 +257,7 @@ module.exports = function () {
   this.When(/^I click the first movie$/, async function () {
     firstMovie = await driver.wait(until.elementLocated(By.css('.titleColumn > a'))).getText();
     await driver.wait(until.elementLocated(By.linkText(firstMovie))).click();
-    
+
   });
 
   this.Then(/^I should be on the top rated movie's page$/, async function () {
