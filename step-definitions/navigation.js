@@ -243,18 +243,19 @@ module.exports = function () {
       }
     }
 
-    // Lets check to get the assertion error if undefined at this point
+    // At this point lets check to receive assertion error if undefined
     expect(pageThemeWidget).to.be.an.instanceOf(WebElement,
       value + ' links was not found');
 
     let themeWidgetLinks = await pageThemeWidget.findElements(By.css('a'));
 
-    let ranIndex = Math.floor((Math.random() * themeWidgetLinks.length - 1) + 1);
+    let ranIndex = Math.floor(Math.random() * themeWidgetLinks.length);
     clickedTheme = await themeWidgetLinks[ranIndex].getText();
 
-    // I have to sendKeys twice!
-    await themeWidgetLinks[ranIndex].sendKeys(Key.RETURN);
-    await themeWidgetLinks[ranIndex].sendKeys(Key.RETURN);
+    // sendKeys on this webelement list item stops working when running all scenarios
+    //await themeWidgetLinks[ranIndex].sendKeys(Key.RETURN);
+    // So picking up the element again via linkText and sending return
+    await driver.findElement(By.linkText(clickedTheme)).sendKeys(Key.RETURN);
 
     sleepEnabled ? await sleep(sleepTime) : '';
   });
