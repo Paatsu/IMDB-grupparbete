@@ -50,8 +50,10 @@ Feature: Navigation
   Scenario: Browsing the Top Rated Movies
     #Given that I've clicked the menu button
     Given I have clicked on the "main menu"
-    When I click on Top Rated Moved
-    Then I should be presented with a list of the Top Rated Movies
+    When I click on "Top Rated Movies"
+    And I am presented with a list of the Top Rated Movies
+    And I click the first movie
+    Then I should be on the top rated movie's page
 
   # 6.7
   Scenario: Navigate to find the lowest rated movie
