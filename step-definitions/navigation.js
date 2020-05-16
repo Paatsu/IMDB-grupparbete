@@ -8,7 +8,7 @@ module.exports = function () {
   let sleepTime = 3000;
 
   /* ----------------------------------------------------------------------------------------------- */
-  /* 6.1 Scenario: Looking at a poll result without voting and changing between votes and percentage */
+  /* 6.1 Scenario: Looking at a poll result without voting and changing between votes to percentage */
   /* ----------------------------------------------------------------------------------------------- */
 
   let selectedPollName;
@@ -66,53 +66,56 @@ module.exports = function () {
     await driver.wait(until.elementTextMatches(firstBar, /[0-9]/));
 
     // Collect all voting results content
-    voteResults = await driver.findElements(By.css('li.answer > div.content'));
+    voteResults = await driver.findElements(By.css('li.answer'));
 
-    // Checking all currently displayed vote counts
+    // Verifying currently displayed (not hidden) vote counts
     for (let children of voteResults) {
       let barDiv = await children.findElement(By.css('div.bar'));
       let barDivData = await barDiv.getAttribute('data-count');
       let barDivText = await barDiv.getText();
 
       if (barDivText.includes(barDivData)) {
-        expect(await barDiv.getText()).to.include(await barDiv.getAttribute('data-count'),
+        expect(await barDiv.getText()).to.include(barDivData,
           'displayed vote count did not match attribute data');
       }
       else {
-        expect(await children.findElement(By.css('span')).getText()).to.include(await barDiv.getAttribute('data-count'),
+        let classAttr = await children.getAttribute('class');
+        if (classAttr.includes('hidden')) { break; }
+        let spanText = await children.findElement(By.css('span.count')).getText();
+        expect(spanText).to.include(barDivData,
           'displayed vote count did not match attribute data');
       }
     }
+
+    await voteResults[0].findElement(By.css('li.answer > div.content > div.bar')).click();
 
     sleepEnabled ? await sleep(sleepTime) : '';
   });
 
 
-  this.Then(/^values in the chart should change from number of votes to percentage or vice versa$/, async function () {
+  this.Then(/^values in the chart should change from number of votes to percentage$/, async function () {
 
-    await voteResults[0].findElement(By.css('li.answer > div.content > div.bar')).click();
-
-    // Checking all currently displayed percent votes per choice
+    // Verifying currently displayed (not hidden) percent votes per choice
     for (let children of voteResults) {
-
       let barDiv = await children.findElement(By.css('div.bar'));
       let barDivDataPct = await barDiv.getAttribute('data-pct');
       let barDivText = await barDiv.getText();
 
       if (barDivText.includes(barDivDataPct)) {
-        expect(await barDiv.getText()).to.include(await barDiv.getAttribute('data-pct'),
-          'displayed vote percentage did not match attribute data');
+        expect(await barDiv.getText()).to.include(barDivDataPct,
+          'displayed vote count did not match attribute data');
       }
       else {
-        expect(await children.findElement(By.css('span')).getText()).to.include(await barDiv.getAttribute('data-count'),
-          'displayed vote percentage did not match attribute data');
+        let classAttr = await children.getAttribute('class');
+        if (classAttr.includes('hidden')) { break; }
+        let spanText = await children.findElement(By.css('span.count')).getText();
+        expect(spanText).to.include(barDivDataPct,
+          'displayed vote count did not match attribute data');
       }
-
     }
 
     sleepEnabled ? await sleep(sleepTime) : '';
   });
-
 
   /* ------------------------------------------------------------------------------------------------------------ */
   /* 6.2 Scenario: Browsing same actor from "Born Today" scroller on start page and via "Born Today" in main menu */

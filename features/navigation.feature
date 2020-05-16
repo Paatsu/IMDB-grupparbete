@@ -6,13 +6,13 @@ Feature: Navigation
     Given that I am on the IMDB site
 
   # 6.1
-  Scenario: Looking at a poll result without voting and changing between votes and percentage
+  Scenario: Looking at a poll result without voting and changing between votes to percentage
     Given I have clicked on the "main menu"
     And have clicked "Polls" under Community
     And have clicked on any listed poll
     And have clicked "See results without voting" on poll page
     When clicking on any of the bars in the voting results chart
-    Then values in the chart should change from number of votes to percentage or vice versa
+    Then values in the chart should change from number of votes to percentage
 
   # 6.2
   Scenario: Browsing same actor from "Born Today" scroller on start page and via "Born Today" in main menu
