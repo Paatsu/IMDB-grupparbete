@@ -73,6 +73,7 @@ module.exports = function () {
 
     await watchlistButtonHeader.click();
 
+    await driver.wait(until.elementLocated(By.css('h3.lister-item-header')));
     let watchlistH3 = await $('h3.lister-item-header');
     expect(watchlistH3, 'Could not find the h3 in Watchlist page');
     let h3 = await watchlistH3.getText();
@@ -80,14 +81,11 @@ module.exports = function () {
 
     // Remove movie from Watchlist to reset the test
 
-    await driver.navigate().back();
-    await driver.wait(until.elementLocated(By.css('.wl-ribbon.standalone.inWL')));
-    watchlistButton = await $('.wl-ribbon.standalone.inWL');
-    expect(watchlistButton, 'Could not find the button' + button + ' on the site');
-    await watchlistButton.click();
-    await driver.wait(until.elementLocated(By.css('.wl-ribbon.standalone.not-inWL')));
-
-    // await sleep(sleepTime);
+    await driver.wait(until.elementLocated(By.css('.wl-ribbon.poster.inWL')));
+    let removeWatchlistButton = await $('.wl-ribbon.poster.inWL');
+    expect(removeWatchlistButton, 'Could not find the remove button');
+    await driver.wait(until.elementLocated(By.css('h3.lister-item-header'))).click(); // just to focus on the page before clicking
+    await removeWatchlistButton.click();
 
   });
 
