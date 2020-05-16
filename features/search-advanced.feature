@@ -5,9 +5,10 @@ Feature: Using Advanced search to find ...
   # 2.1
   Scenario: Browsing by keywords from Advanced Search Pages and filtering to find "One Punch Man"
     Given I have clicked on the "All" button beside the top search field on any page
+    And have clicked the "Advanced Search"
     And have clicked "Keyword" beside "Browse titles by:"
     And entered the keyword "ani" in the input field beside "Enter a keyword:" and clicked "Go"
-    And clicked "anime" on the 'Displaying 200 results for "ani"' page
+    And clicked "anime" on the "Displaying 200 results for" "ani" page
     And the "Most Popular Anime Movies and TV Shows" has loaded
     And the "Keyword" corresponding to selected keyword is checked in the "Refine" options (filter)
     When resulting titles are sorted by "Popularity" ascending
