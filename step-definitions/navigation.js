@@ -131,6 +131,7 @@ module.exports = function () {
     sleepEnabled ? await sleep(sleepTime) : '';
   });
 
+
   /* ------------------------------------------------------------------------------------------------------------ */
   /* 6.2 Scenario: Browsing same actor from "Born Today" scroller on start page and via "Born Today" in main menu */
   /* ------------------------------------------------------------------------------------------------------------ */
@@ -266,7 +267,8 @@ module.exports = function () {
 
     let themeWidgetLinks = await pageThemeWidget.findElements(By.css('a'));
 
-    let ranIndex = Math.floor(Math.random() * themeWidgetLinks.length);
+    // Minus one length since we dont want to click the last link (Browse/Search by keyword) in widget
+    let ranIndex = Math.floor(Math.random() * themeWidgetLinks.length - 1);
     clickedTheme = await themeWidgetLinks[ranIndex].getText();
     // sendKeys on this webelement list item stops working when running all scenarios
 
