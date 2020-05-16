@@ -9,7 +9,7 @@ Feature: Changing User profile and password settings
 
   # 7.1
   Scenario: Change your user ID
-    Given you are on "Accound Settings"
+    When you are on "Accound Settings"
     And clicked on "Edit profile"
     And clicked on "Edit" besides your "User id"
     And logged in to your acccount again
@@ -18,6 +18,7 @@ Feature: Changing User profile and password settings
 
   # 7.2
   Scenario: Adding text to your bio
+
 
   # 7.3
   Scenario: Change your password
