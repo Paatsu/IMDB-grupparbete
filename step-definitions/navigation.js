@@ -314,6 +314,82 @@ module.exports = function () {
   /* 6.4 Scenario: Browsing and clicking movies listed in Fan Favorite scroller on startpage */
   /* --------------------------------------------------------------------------------------- */
 
+  let posterToClick;
+  let scrollerLinks = [];
+
+  this.Given(/^I click the first and the last movie \(from left to right\) in the "([^"]*)" scroller$/, async function (value) {
+
+    let fanFavorites = await driver.wait(until.elementLocated(By.css('div.fan-picks')), 10000);
+    let scrollerButtonR = await fanFavorites.findElement(By.css('.ipc-pager--right'));
+
+    // Clicking to the last poster of scroller
+    while (true) {
+      let buttonCss = await scrollerButtonR.getAttribute('class');
+      if (!buttonCss.includes('visible')) { break; }
+      await scrollerButtonR.click();
+      await sleep(2500);
+    }
+
+    // All scroller <a> tags actually seem "unfindable" if not scrolled through entire scroller 
+    let scrollerPosters = await fanFavorites.findElements(By.css('div.ipc-poster-card'));
+
+    for (let poster of scrollerPosters) {
+      let links = await poster.findElements(By.css('a[href*="/title/"][aria-label]'));
+
+      // Non dynamic. Im a lazy coder so expecting each poster to contain given amount of links
+      expect(links.length).to.equal(2,
+        'expected two similar links under every poster item in the' + value + ' scroller');
+
+      let url1 = await links[0].getAttribute('href');
+      let url2 = await links[1].getAttribute('href');
+      let title1 = await links[0].getAttribute('aria-label');
+      let title2 = await links[1].getAttribute('aria-label');
+
+      // Will only test click on first url of each poster but checking both url on all posters for mismatch
+      // Was initially going to test click on every poster in scroller, but takes too damn long without opening new tabs!
+      expect(url1).to.equal(url2, 'url mismatch between the two links under a poster item in the' + value + ' scroller');
+      expect(title1).to.equal(title2, 'label mismatch between the two links under a poster item in the' + value + ' scroller');;
+
+      scrollerLinks.push({
+        title1: title1,
+        url1: url1,
+        targetPageHeadline: ''
+      })
+
+      if (scrollerPosters.indexOf(poster) === scrollerPosters.length - 1) {
+        posterToClick = links[0];
+      }
+    }
+
+    // Click last poster in scroller
+    await posterToClick.click();
+    scrollerLinks[scrollerLinks.length - 1].targetPageHeadline = await driver.wait(until.elementLocated(By.css('div.title_wrapper > h1')), 10000).getText();
+
+    await driver.navigate().back();
+
+    // Fetching WebElements again! Dont know if they are "stale" at this point
+    fanFavorites = await driver.wait(until.elementLocated(By.css('div.fan-picks')), 10000);
+    scrollerPosters = await fanFavorites.findElements(By.css('div.ipc-poster-card'));
+
+    for (let poster of scrollerPosters) {
+      let links = await poster.findElements(By.css('a[href*="/title/"][aria-label]'));
+      posterToClick = links[0];
+      break;
+    }
+
+    // Click first poster in scroller
+    await posterToClick.click();
+    scrollerLinks[0].targetPageHeadline = await driver.wait(until.elementLocated(By.css('div.title_wrapper > h1')), 10000).getText();
+
+  });
+
+
+  this.Then(/^those movies summary pages should load$/, function () {
+    expect(scrollerLinks[0].targetPageHeadline).to.include(scrollerLinks[0].title1);
+    expect(scrollerLinks[scrollerLinks.length - 1].targetPageHeadline).to.include(scrollerLinks[scrollerLinks.length - 1].title1);
+  });
+
+
   /* -------------------------------------------- */
   /* 6.5 Scenario: Finding a years Oscars Winners */
   /* -------------------------------------------- */
