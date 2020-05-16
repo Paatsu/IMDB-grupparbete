@@ -18,7 +18,10 @@ Feature: Changing User profile and password settings
 
   # 7.2
   Scenario: Adding text to your bio
-
+    When you are on "Accound Settings"
+    And clicked on "Edit profile"
+    Then input a text to the textfield under "Bio"
+    And clicked "Save Description"
 
   # 7.3
   Scenario: Change your password
