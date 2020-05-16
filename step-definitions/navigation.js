@@ -387,8 +387,10 @@ module.exports = function () {
 
 
   this.Then(/^those movies summary pages should load$/, function () {
-    expect(scrollerLinks[0].targetPageHeadline).to.include(scrollerLinks[0].title1);
-    expect(scrollerLinks[scrollerLinks.length - 1].targetPageHeadline).to.include(scrollerLinks[scrollerLinks.length - 1].title1);
+    expect(scrollerLinks[0].targetPageHeadline).to.include(scrollerLinks[0].title1,
+      'clicked movie poster in scroller didnt match page loaded');
+    expect(scrollerLinks[scrollerLinks.length - 1].targetPageHeadline).to.include(scrollerLinks[scrollerLinks.length - 1].title1,
+      'clicked movie poster in scroller didnt match page loaded');
   });
 
 
