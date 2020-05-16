@@ -2,6 +2,9 @@ Feature: Using Advanced search to find ...
 
   Using Advanced search to find given actors, movies, TV-shows or games
 
+  Background:
+    Given that I am on the IMDB site
+
   # 2.1
   Scenario: Browsing by keywords from Advanced Search Pages and filtering to find "One Punch Man"
     Given I have clicked on the "All" button beside the top search field on any page
