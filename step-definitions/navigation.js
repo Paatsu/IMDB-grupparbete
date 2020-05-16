@@ -74,17 +74,24 @@ module.exports = function () {
       let barDivData = await barDiv.getAttribute('data-count');
       let barDivText = await barDiv.getText();
 
+      let dataCorrect = false;
       if (barDivText.includes(barDivData)) {
-        expect(await barDiv.getText()).to.include(barDivData,
-          'displayed vote count did not match attribute data');
+        dataCorrect = true;
       }
       else {
         let classAttr = await children.getAttribute('class');
-        if (classAttr.includes('hidden')) { break; }
+        if (classAttr.includes('hidden')) {
+          // Not testing hidden
+          dataCorrect = true;
+          break;
+        }
         let spanText = await children.findElement(By.css('span.count')).getText();
-        expect(spanText).to.include(barDivData,
-          'displayed vote count did not match attribute data');
+        if (spanText.includes(barDivData)) {
+          dataCorrect = true;
+        }
       }
+
+      expect(dataCorrect, 'one ore more displayed vote counts did not match attribute data').to.be.true;
     }
 
     await voteResults[0].findElement(By.css('li.answer > div.content > div.bar')).click();
@@ -101,17 +108,24 @@ module.exports = function () {
       let barDivDataPct = await barDiv.getAttribute('data-pct');
       let barDivText = await barDiv.getText();
 
+      let dataCorrect = false;
       if (barDivText.includes(barDivDataPct)) {
-        expect(await barDiv.getText()).to.include(barDivDataPct,
-          'displayed vote count did not match attribute data');
+        dataCorrect = true;
       }
       else {
         let classAttr = await children.getAttribute('class');
-        if (classAttr.includes('hidden')) { break; }
+        if (classAttr.includes('hidden')) {
+          // Not testing hidden
+          dataCorrect = true;
+          break;
+        }
         let spanText = await children.findElement(By.css('span.count')).getText();
-        expect(spanText).to.include(barDivDataPct,
-          'displayed vote count did not match attribute data');
+        if (spanText.includes(barDivDataPct)) {
+          dataCorrect = true;
+        }
       }
+
+      expect(dataCorrect, 'one ore more displayed vote counts did not match attribute data').to.be.true;
     }
 
     sleepEnabled ? await sleep(sleepTime) : '';
