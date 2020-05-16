@@ -1,5 +1,7 @@
+const { WebElement, By, Key, until } = require('selenium-webdriver');
 const { username, password } = require('./credentials.json');
 let { $, sleep } = require('./funcs');
+
 
 module.exports = function () {
 
@@ -23,10 +25,11 @@ module.exports = function () {
     await menuButton.click();
 
     //let menuPanel = await driver.findElement(By.css('div[data-testid="panel"]'));
-    let menuPanel = await driver.wait(until.elementLocated(By.css('div[data-testid="panel"]')), 10000);
+    let menuPanel = await driver.wait(until.elementLocated(By.css('div[data-testid="panel"][aria-hidden="false"]')), 10000);
 
-    expect(await menuPanel.isDisplayed(),
-      value + ' did not open on click').to.be.true;
+    // await menuDrawer.isDisplayed() seems unreliable here
+    expect(await menuPanel.getAttribute('aria-hidden'),
+      value + ' did not open on click').to.equal('false');
 
   });
 
