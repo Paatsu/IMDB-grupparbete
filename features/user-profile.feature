@@ -6,11 +6,11 @@ Feature: Changing User profile and password settings
   Background:
     Given that I am on the IMDB site
     And that you are logged in to your IMDB account
+    And you are on "Accound Settings"
 
   # 7.1
   Scenario: Change your user ID
-    When you are on "Accound Settings"
-    And clicked on "Edit profile"
+    When clicked on "Edit profile"
     And clicked on "Edit" besides your "User id"
     And logged in to your acccount again
     Then input your new user ID
@@ -18,16 +18,14 @@ Feature: Changing User profile and password settings
 
   # 7.2
   Scenario: Adding text to your bio
-    When you are on "Accound Settings"
-    And clicked on "Edit profile"
+    When clicked on "Edit profile"
     Then input a text to the textfield under "Bio"
     And clicked the button "Save Description"
 
   # 7.3
   Scenario: Change your password
-    When you are on "Accound Settings"
-    And clicked on "Login and security"
-    And click "Edit" besides "Password"
+    When clicked on "Login and security"
+    And clicked "Edit" besides "Password"
     Then input your "Current password"
     And input your "New password"
     And reenter your "New password"
