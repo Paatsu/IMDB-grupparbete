@@ -6,7 +6,7 @@ Feature: Changing User profile and password settings
   Background:
     Given that I am on the IMDB site
     And that you are logged in to your IMDB account
-    And you are on "Accound Settings"
+    And you are on "Account settings"
 
   # 7.1
   Scenario: Change your user ID
