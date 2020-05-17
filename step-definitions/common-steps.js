@@ -81,5 +81,20 @@ module.exports = function () {
 
   });
 
+  // Use Gherkin: When resulting titles are sorted by "Popularity" ascending
+  // Applies to search result movie listing page...
+
+  this.When(/^the born today list is sorted by "([^"]*)" descending$/, async function (arg1) {
+
+    let resultListPageHeadline = await driver.wait(until.elementLocated(By.css('#main > div.article > h1.header')), 10000).getText();
+
+    let headLineStr = 'Popularity Ascending';
+
+    expect(resultListPageHeadline).to.include(headLineStr,
+      'headline on target page did not contain "' + headLineStr + '"');
+
+    sleepEnabled ? await sleep(sleepTime) : '';
+  });
+
 
 }

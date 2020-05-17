@@ -18,12 +18,12 @@ Feature: Using Advanced search to find ...
     Then "One Punch Man" should be among the top 50 results on that page
 
   #2.2
-  Scenario: Advanced search for the movie Face-Off by "Same People" collaboration
+  Scenario: Advanced search for the movie Face-Off by "Same Title" collaboration
     Given clicked "Search Collaborations"
-    And entered "John Tr" in the "Name 1" input field
-    And clicked on suggested option "John Travolta (I)"
-    And entered "Nicolas Ca" in the "Name 2" input field
-    And clicked on suggested option "Nicolas Cage"
-    When clicking "SEARCH" button
+    And entered "john tr" in the first "Name 1" input field
+    And clicked on suggested option "John Travolta (I)" of first input field
+    And entered "nicolas ca" in the second "Name 2" input field
+    And clicked on suggested option "Nicolas Cage" of second input field
+    When clicking "SEARCH" button of the "Two People in the Same Title" form
     And resulting titles are sorted by "Popularity" ascending
     Then the movie "Face/Off" should be the top search result

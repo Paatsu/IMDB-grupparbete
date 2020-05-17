@@ -8,7 +8,7 @@ module.exports = function () {
   let sleepTime = 3000;
 
   /* ----------------------------------------------------------------------------------------------- */
-  /* 6.1 Scenario: Looking at a poll result without voting and changing between votes to percentage */
+  /* 6.1 Scenario: Looking at a poll result without voting and changing between votes to percentage  */
   /* ----------------------------------------------------------------------------------------------- */
 
   let selectedPollName;
@@ -176,19 +176,6 @@ module.exports = function () {
     //let today = new Date();
     //let headLineStr = 'Birth Month Day of 0' + (parseInt(today.getMonth()) + 1) + '-' + today.getDate();
     let headLineStr = 'Birth Month Day of';
-
-    expect(bornTodayPageHeadline).to.include(headLineStr,
-      'headline on target page did not contain "' + headLineStr + '"');
-
-    sleepEnabled ? await sleep(sleepTime) : '';
-  });
-
-
-  this.When(/^the born today list is sorted by "([^"]*)" descending$/, async function (arg1) {
-
-    let bornTodayPageHeadline = await driver.wait(until.elementLocated(By.css('#main > div.article > h1.header')), 10000).getText();
-
-    let headLineStr = 'Popularity Ascending';
 
     expect(bornTodayPageHeadline).to.include(headLineStr,
       'headline on target page did not contain "' + headLineStr + '"');
