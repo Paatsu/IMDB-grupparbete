@@ -4,12 +4,12 @@ Feature: Using Advanced search to find ...
 
   Background:
     Given that I am on the IMDB site
+    And I have clicked on the "All" button beside the top search field on any page
+    And have clicked the "Advanced Search"
 
   # 2.1
   Scenario: Browsing by keywords from Advanced Search Pages and filtering to find "One Punch Man"
-    Given I have clicked on the "All" button beside the top search field on any page
-    And have clicked the "Advanced Search"
-    And have clicked "Keyword" beside "Browse titles by:"
+    Given have clicked "Keyword" beside "Browse titles by:"
     And entered the keyword "ani" in the input field beside "Enter a keyword:" and clicked "Go"
     And clicked "anime" on the "Displaying 200 results for" "ani" page
     And the "Most Popular Anime Movies and TV Shows" has loaded
@@ -19,8 +19,7 @@ Feature: Using Advanced search to find ...
 
   #2.2
   Scenario: Advanced search for the movie Face-Off by "Same People" collaboration
-    Given I have clicked on the "All" button beside the top search field on any page
-    And clicked "Search Collaborations"
+    Given clicked "Search Collaborations"
     And entered "John Tr" in the "Name 1" input field
     And clicked on suggested option "John Travolta (I)"
     And entered "Nicolas Ca" in the "Name 2" input field

@@ -6,21 +6,6 @@ module.exports = function () {
 
   let keywordOnPage;
 
-  this.Given(/^I have clicked on the "([^"]*)" button beside the top search field on any page$/, async function (button) {
-
-    let allButton = await driver.wait(until.elementLocated(By.css('.search-category-selector .ipc-button__text'))).click();
-    expect(allButton, 'Could not find the All button on the page');
-    let allButtonText = await driver.findElement(By.css('.search-category-selector .ipc-button__text')).getText();
-    expect(allButtonText).to.equal(button, 'We have clicked the wrong button');
-
-  });
-
-  this.Given(/^have clicked the "([^"]*)"$/, async function (button) {
-    let advancedButton = await driver.findElement(By.linkText('Advanced Search')).click();
-    expect(advancedButton, 'Could not find the Advanced Search on the page');
-
-  });
-
   this.Given(/^have clicked "([^"]*)" beside "([^"]*)"$/, async function (keyword, findText) {
 
     let findTextOnPage = await driver.wait(until.elementLocated(By.css('.imdb-search-gateway__browse'))).getText();
