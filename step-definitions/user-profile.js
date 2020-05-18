@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { WebElement, By, Key, until } = require('selenium-webdriver');
-const { username, password } = require('./credentials.json');
+const { username, password, testedPasswords } = require('./credentials.json');
 let { $, sleep } = require('./funcs');
 
 module.exports = function () {
