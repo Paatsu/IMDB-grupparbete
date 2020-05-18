@@ -2,7 +2,49 @@ let { $, sleep } = require('./funcs');
 
 module.exports = function () {
 
-  // 7.2 Scenario: Adding text to your bio
+  // --------------------------------------------------------------------------------------------------------------------------------- //
+  // 7.1 ----------------------------------------------------------------------------------------------------------------------------- //
+  // --------------------------------------------------------------------------------------------------------------------------------- //
+
+  let newUserID;
+
+  this.When(/^clicked on "([^"]*)" besides your User id$/, async function (linkText) {
+
+    // This was the easiest place I could find the current name in
+    newUserID = await driver.findElement(By.css('.auth-input-row > div')).getText();
+    
+    driver.wait(until.elementLocated(By.linkText(linkText))).click();
+
+  });
+
+  this.When(/^you enter a new user ID in the input field$/, async function () {
+
+    let nameInput = await driver.wait(until.elementLocated(By.css(".auth-input--input")));
+
+    // this ternery changes your username to a different one of two
+    newUserID == "AWESOMEGUYadfjasdfjasghlplfjvnen" ? newUserID = "COOLGUYadfjasdfjasghlplfwfiqjvnn" : newUserID = "AWESOMEGUYadfjasdfjasghlplfjvnen";
+    nameInput.clear();
+    nameInput.sendKeys(newUserID);
+    await sleep(2000)
+
+  });
+
+  this.When(/^clicked the Save Changes button$/, async function () {
+
+    await driver.wait(until.elementLocated(By.css('input[value="Save Changes"]'))).click();
+
+  });
+
+  this.Then(/^your user ID should be a new user ID$/, async function () {
+    
+    let endName = await driver.wait(until.elementLocated(By.css('.auth-input-row'))).getText();
+    expect(endName).to.include(newUserID, "The new name is not equals to what you put in");
+
+  });
+
+  // --------------------------------------------------------------------------------------------------------------------------------- //
+  // 7.2 Scenario: Adding text to your bio ------------------------------------------------------------------------------------------- //
+  // --------------------------------------------------------------------------------------------------------------------------------- //
 
   let loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
 
@@ -10,14 +52,14 @@ module.exports = function () {
 
     let accountButton = await driver.wait(until.elementLocated(By.css('.navbar__user-menu-toggle__button'))).click();
     expect(accountButton, 'Could not find the Account button');
-    let accountSettingsButton = await driver.findElement(By.linkText(linkText)).click();
+    let accountSettingsButton = await driver.wait(until.elementLocated(By.linkText(linkText))).click();
     expect(accountSettingsButton, 'Could not find the Account settings link');
 
   });
 
   this.When(/^clicked on "([^"]*)"$/, async function (linkText) {
 
-    let accountSettingsButton = await driver.findElement(By.linkText(linkText)).click();
+    let accountSettingsButton = await driver.wait(until.elementLocated(By.linkText(linkText))).click();
     expect(accountSettingsButton, 'Could not find the Edit profile link');
 
   });
