@@ -2,22 +2,25 @@ let { $, sleep } = require('./funcs');
 
 module.exports = function () {
 
-  let sleepTime = 3000;
+  let sleepTime = 0;
 
   // Scenario: Rate the movie "Terminator 2"
 
   this.Then(/^click the button "([^"]*)"$/, async function (button) {
 
-    await driver.wait(until.elementLocated(By.css('.star-rating-text')));
-    let ratingButton = await $('.star-rating-widget .star-rating-button button');
+    await driver.wait(until.elementLocated(By.css('.wl-ribbon')));
+    let ratingButton = await $('.star-rating-button');
     expect(ratingButton, 'Could not find the button' + button + ' on the site');
-    await ratingButton.sendKeys(selenium.Key.ENTER);
+    let h1focus = await $('.title_wrapper h1');
+    await h1focus.click(); // focus on something before clicking
+    await ratingButton.click();
 
     await sleep(sleepTime);
 
   });
 
   this.Then(/^rate it (\d+) stars$/, async function (rating) {
+
     await driver.wait(until.elementLocated(By.css('.star-rating-button.open')));
     let ratingLink = await $('span.star-rating-stars > a:nth-child(10)');
     expect(ratingLink, 'Could not find the link for 10th star rating');
@@ -31,7 +34,7 @@ module.exports = function () {
     let ratedValue = await ratingChosen[0].getText();
     expect(+ratedValue, 'We rated to movie wrong').to.equal(+rating);
 
-    await sleep(3000);
+    await sleep(sleepTime);
 
     // Remove rating to reset test
 
