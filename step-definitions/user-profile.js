@@ -141,7 +141,7 @@ module.exports = function () {
   this.Then(/^input a "([^"]*)" \(new password\)$/, async function (arg1) {
 
     let inputNewPassword = await driver.wait(until.elementLocated(By.css('input#ap_password_new')), 10000);
-    await inputNewPassword.sendKeys(newRandomPassword);
+    await inputNewPassword.sendKeys(password);
 
     sleepEnabled ? await sleep(sleepTime) : '';
   });
@@ -151,7 +151,7 @@ module.exports = function () {
   this.Then(/^reenter your "([^"]*)" \(new password\)$/, async function (arg1) {
 
     let inputReenterPassword = await driver.wait(until.elementLocated(By.css('input#ap_password_new_check')), 10000);
-    await inputReenterPassword.sendKeys(newRandomPassword);
+    await inputReenterPassword.sendKeys(password);
 
     sleepEnabled ? await sleep(sleepTime) : '';
   });
@@ -162,23 +162,23 @@ module.exports = function () {
 
     let savePasswordButton = await driver.wait(until.elementLocated(By.css('input#cnep_1D_submit_button')), 10000).click();
     let successMessage = await driver.wait(until.elementLocated(By.css('div#auth-success-message-box')), 10000);
-
-    if (successMessage instanceof WebElement) {
-      let userData = {
-        username: username,
-        password: newRandomPassword,
-        old_password: password
-      }
-
-      let jsonData = JSON.stringify(userData);
-      let path = "./step-definitions/credentials.json"
-
-      fs.writeFile(path, jsonData, 'utf8', function (error) {
-        if (error) { throw new Error('An error occured while writing JSON file'); }
-        //console.log(path + ' has been saved');
-      });
-    }
-
+    /*
+        if (successMessage instanceof WebElement) {
+          let userData = {
+            username: username,
+            password: newRandomPassword,
+            old_password: password
+          }
+    
+          let jsonData = JSON.stringify(userData);
+          let path = "./step-definitions/credentials.json"
+    
+          fs.writeFile(path, jsonData, 'utf8', function (error) {
+            if (error) { throw new Error('An error occured while writing JSON file'); }
+            //console.log(path + ' has been saved');
+          });
+        }
+    */
   });
 
 
