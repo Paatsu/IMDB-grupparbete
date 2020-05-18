@@ -6,12 +6,12 @@ module.exports = function () {
   // 7.1 ----------------------------------------------------------------------------------------------------------------------------- //
   // --------------------------------------------------------------------------------------------------------------------------------- //
 
-  let newUserID;
+  let oldUserID;
 
   this.When(/^clicked on "([^"]*)" besides your User id$/, async function (linkText) {
 
     // This was the easiest place I could find the current name in
-    newUserID = await driver.findElement(By.css('.auth-input-row > div')).getText();
+    oldUserID = await driver.findElement(By.css('.auth-input-row > div')).getText();
     
     driver.wait(until.elementLocated(By.linkText(linkText))).click();
 
@@ -22,9 +22,8 @@ module.exports = function () {
     let nameInput = await driver.wait(until.elementLocated(By.css(".auth-input--input")));
 
     // this ternery changes your username to a different one of two
-    newUserID == "AWESOMEGUYadfjasdfjasghlplfjvnen" ? newUserID = "COOLGUYadfjasdfjasghlplfwfiqjvnn" : newUserID = "AWESOMEGUYadfjasdfjasghlplfjvnen";
     nameInput.clear();
-    nameInput.sendKeys(newUserID);
+    nameInput.sendKeys("AWESOMEGUYadfjasdfjasghlplfjvnen");
     await sleep(2000)
 
   });
@@ -38,7 +37,14 @@ module.exports = function () {
   this.Then(/^your user ID should be a new user ID$/, async function () {
     
     let endName = await driver.wait(until.elementLocated(By.css('.auth-input-row'))).getText();
-    expect(endName).to.include(newUserID, "The new name is not equals to what you put in");
+    expect(endName).to.include("AWESOMEGUYadfjasdfjasghlplfjvnen");
+
+    // after this we set the username back to the original so the test works on multiple accounts
+    await driver.wait(until.elementLocated(By.linkText("Edit"))).click();
+    let nameInput = await driver.wait(until.elementLocated(By.css(".auth-input--input")));
+    nameInput.clear();
+    nameInput.sendKeys(oldUserID);
+    await driver.wait(until.elementLocated(By.css('input[value="Save Changes"]'))).click();
 
   });
 
