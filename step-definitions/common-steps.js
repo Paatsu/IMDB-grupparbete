@@ -5,6 +5,9 @@ let { $, sleep } = require('./funcs');
 
 module.exports = function () {
 
+  let sleepEnabled = false;
+  let sleepTime = 3000;
+
   // Use Gherkin: Given that I am on the IMDB site
 
   this.Given(/^that I am on the IMDB site$/, async function () {
@@ -31,6 +34,7 @@ module.exports = function () {
     expect(await menuPanel.getAttribute('aria-hidden'),
       value + ' did not open on click').to.equal('false');
 
+    sleepEnabled ? await sleep(sleepTime) : '';
   });
 
   // Use Gherkin: Given I have clicked on the "All" button beside the top search field on any page
@@ -42,6 +46,7 @@ module.exports = function () {
     let allButtonText = await driver.findElement(By.css('.search-category-selector .ipc-button__text')).getText();
     expect(allButtonText).to.equal(button, 'We have clicked the wrong button');
 
+    sleepEnabled ? await sleep(sleepTime) : '';
   });
 
   // Use Gherkin: Given have clicked the "Advanced Search"
@@ -50,6 +55,7 @@ module.exports = function () {
     let advancedButton = await driver.findElement(By.linkText('Advanced Search')).click();
     expect(advancedButton, 'Could not find the Advanced Search on the page');
 
+    sleepEnabled ? await sleep(sleepTime) : '';
   });
 
 
@@ -79,6 +85,7 @@ module.exports = function () {
     expect(signinButton, 'Could not find the signin button');
     await signinButton.click();
 
+    sleepEnabled ? await sleep(sleepTime) : '';
   });
 
   // Use Gherkin: When resulting titles are sorted by "Popularity" ascending
@@ -88,13 +95,28 @@ module.exports = function () {
 
     let resultListPageHeadline = await driver.wait(until.elementLocated(By.css('#main > div.article > h1.header')), 10000).getText();
 
-    let headLineStr = 'Popularity Ascending';
-
-    expect(resultListPageHeadline).to.include(headLineStr,
-      'headline on target page did not contain "' + headLineStr + '"');
+    //let headLineStr = 'Popularity Ascending';
+    //expect(resultListPageHeadline).to.include(headLineStr,
+    //  'headline on target page did not contain "' + headLineStr + '"');
 
     sleepEnabled ? await sleep(sleepTime) : '';
   });
 
+  // Use Gherkin: And you are on "Account settings"
+
+  this.Given(/^you are on "([^"]*)"$/, async function (value) {
+
+    let userMenubutton = await driver.wait(until.elementLocated(By.css('.navbar__user-menu-toggle__button')), 10000);
+    //expect(userMenubutton, 'usermenu button was not found');
+    userMenubutton.click();
+
+    let userMenu = await driver.wait(until.elementLocated(By.css('div[data-menu-id="navUserMenu"].ipc-menu--anim-enter-done')), 10000);
+    //expect(userMenu, 'usermenu did not open');
+
+    let accountSettingsLink = await driver.wait(until.elementLocated(By.css('a[href*="/registration/accountsettings"]')), 10000);
+    //expect(accountSettingsLink, 'usermenu link ' + value + 'was not found');
+    await accountSettingsLink.click();
+
+  });
 
 }
