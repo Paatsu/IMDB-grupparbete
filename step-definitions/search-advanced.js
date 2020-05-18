@@ -89,8 +89,8 @@ module.exports = function () {
 
   this.Given(/^clicked "([^"]*)"$/, async function (value) {
 
-    let collabLink = await driver.wait(until.elementLocated(By.linkText(value)));
-    expect(collabLink, 'Could not find the link ' + value);
+    let collabLink = await driver.wait(until.elementLocated(By.linkText(value)), 10000,
+      'Could not find the link ' + value);
 
     await collabLink.click();
 
@@ -104,8 +104,8 @@ module.exports = function () {
 
     // Until everythiiiing! :-)
 
-    let name1Field = await driver.wait(until.elementLocated(By.css('div#Name-1-search-bar > input#Name-1-search-bar-input')), 10000);
-    expect(name1Field, 'Could not find' + value2 + ' input field');
+    let name1Field = await driver.wait(until.elementLocated(By.css('div#Name-1-search-bar > input#Name-1-search-bar-input')), 10000,
+      'Could not find' + value2 + ' input field');
 
     // Have to input slowly since search items becomes stale everytime search is performed by autosuggestion
     for (let char of [...value1]) {
@@ -143,8 +143,8 @@ module.exports = function () {
 
     // Until everythiiiing! :-)
 
-    let name2Field = await driver.wait(until.elementLocated(By.css('div#Name-2-search-bar > input#Name-2-search-bar-input')), 10000);
-    expect(name2Field, 'Could not find' + value2 + ' input field');
+    let name2Field = await driver.wait(until.elementLocated(By.css('div#Name-2-search-bar > input#Name-2-search-bar-input')), 10000,
+      'Could not find' + value2 + ' input field');
 
     // Have to input slowly since search items becomes stale everytime search is performed by autosuggestion
     for (let char of [...value1]) {
@@ -177,8 +177,8 @@ module.exports = function () {
 
   this.When(/^clicking "([^"]*)" button of the "([^"]*)" form$/, async function (value1, value2) {
 
-    let searchButton = await driver.wait(until.elementLocated(By.css('button.Name-search-done')), 10000);
-    expect(searchButton, 'Could not find the' + value1 + ' button of ' + value2 + ' form');
+    let searchButton = await driver.wait(until.elementLocated(By.css('button.Name-search-done')), 10000,
+      'Could not find the' + value1 + ' button of ' + value2 + ' form');
 
     await searchButton.click();
 
