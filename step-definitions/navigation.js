@@ -465,4 +465,23 @@ module.exports = function () {
 
   });
 
+  
+  /* ----------------------------------------------------- */
+  /* 6.8 Scenario: Navigate to movies by genre ----------- */
+  /* ----------------------------------------------------- */
+
+  this.When(/^I click on the "([^"]*)" Genre$/, async function (genre) {
+
+    await driver.wait(until.elementLocated(By.css(`img[title="${genre}"]`))).click();
+
+  });
+
+  this.Then(/^I should be browsing a list of "([^"]*)" movies$/, async function (genre) {
+   
+    let titleText = await driver.wait(until.elementLocated(By.css('.article > h1'))).getText();
+    expect(titleText).to.include(genre, "You're not browsing the right genre")
+
+  });
+
+
 }

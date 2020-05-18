@@ -60,3 +60,10 @@ Feature: Navigation
     And I clicked on "Top Rated Movies"
     And I clicked on "Lowest Rated Movies" on IMDb Charts menu
     Then I should find the lowest rated movie "Disaster Movie" at rank number 1
+
+  # 6.8
+  Scenario: Navigate to movies by genre
+    When I have clicked on the "main menu"
+    And I click on "Browse Movies by Genre"
+    And I click on the "Sci-Fi" Genre
+    Then I should be browsing a list of "Sci-Fi" movies
