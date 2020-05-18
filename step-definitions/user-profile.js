@@ -1,3 +1,6 @@
+const fs = require('fs');
+const { WebElement, By, Key, until } = require('selenium-webdriver');
+const { username, password } = require('./credentials.json');
 let { $, sleep } = require('./funcs');
 
 module.exports = function () {
@@ -12,7 +15,7 @@ module.exports = function () {
 
     // This was the easiest place I could find the current name in
     newUserID = await driver.findElement(By.css('.auth-input-row > div')).getText();
-    
+
     driver.wait(until.elementLocated(By.linkText(linkText))).click();
 
   });
@@ -36,7 +39,7 @@ module.exports = function () {
   });
 
   this.Then(/^your user ID should be a new user ID$/, async function () {
-    
+
     let endName = await driver.wait(until.elementLocated(By.css('.auth-input-row'))).getText();
     expect(endName).to.include(newUserID, "The new name is not equals to what you put in");
 
@@ -95,5 +98,85 @@ module.exports = function () {
     expect(saveButton, 'Could not find the Save button');
 
   });
+
+  // --------------------------------------------------------------------------------------------------------------------------------- //
+  // 7.3 Scenario: Change your password ------------------------------------------------------------------------------------------- //
+  // --------------------------------------------------------------------------------------------------------------------------------- //
+
+  // Adjust if needed
+  let newRandomPassword = Math.random().toString(36).slice(-10);
+
+  this.When(/^clicked on "([^"]*)" under Account Settings$/, async function (value) {
+
+    let loginSecLink = await driver.wait(until.elementLocated(By.linkText(value)));
+    //expect(loginSecLink, 'account settings link ' + value + 'was not found');
+    await loginSecLink.click();
+
+    sleepEnabled ? await sleep(sleepTime) : '';
+  });
+
+
+  this.When(/^on the Login & security page clicked "([^"]*)" besides "([^"]*)"$/, async function (arg1, arg2) {
+
+    let editPasswordButton = await driver.wait(until.elementLocated(By.css('input#auth-cnep-edit-password-button')), 10000).click();
+
+    sleepEnabled ? await sleep(sleepTime) : '';
+  });
+
+
+
+  this.Then(/^input your "([^"]*)" \(current password\)$/, async function (arg1) {
+
+    let inputCurrentPassword = await driver.wait(until.elementLocated(By.css('input#ap_password')), 10000);
+    await inputCurrentPassword.sendKeys(password);
+
+    sleepEnabled ? await sleep(sleepTime) : '';
+  });
+
+
+
+  this.Then(/^input a "([^"]*)" \(new password\)$/, async function (arg1) {
+
+    let inputNewPassword = await driver.wait(until.elementLocated(By.css('input#ap_password_new')), 10000);
+    await inputNewPassword.sendKeys(newRandomPassword);
+
+    sleepEnabled ? await sleep(sleepTime) : '';
+  });
+
+
+
+  this.Then(/^reenter your "([^"]*)" \(new password\)$/, async function (arg1) {
+
+    let inputReenterPassword = await driver.wait(until.elementLocated(By.css('input#ap_password_new_check')), 10000);
+    await inputReenterPassword.sendKeys(newRandomPassword);
+
+    sleepEnabled ? await sleep(sleepTime) : '';
+  });
+
+
+
+  this.Then(/^clicked the button "([^"]*)" to save new password$/, async function (arg1) {
+
+    let savePasswordButton = await driver.wait(until.elementLocated(By.css('input#cnep_1D_submit_button')), 10000).click();
+    let successMessage = await driver.wait(until.elementLocated(By.css('div#auth-success-message-box')), 10000);
+
+    if (successMessage instanceof WebElement) {
+      let userData = {
+        username: username,
+        password: newRandomPassword,
+        old_password: password
+      }
+
+      let jsonData = JSON.stringify(userData);
+      let path = "./step-definitions/credentials.json"
+
+      fs.writeFile(path, jsonData, 'utf8', function (error) {
+        if (error) { throw new Error('An error occured while writing JSON file'); }
+        //console.log(path + ' has been saved');
+      });
+    }
+
+  });
+
 
 }
