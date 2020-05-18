@@ -8,7 +8,7 @@ module.exports = function () {
   let sleepTime = 0;
 
   /* ----------------------------------------------------------------------------------------------- */
-  /* 6.1 Scenario: Looking at a poll result without voting and changing between votes and percentage */
+  /* 6.1 Scenario: Looking at a poll result without voting and changing between votes to percentage  */
   /* ----------------------------------------------------------------------------------------------- */
 
   let selectedPollName;
@@ -66,48 +66,66 @@ module.exports = function () {
     await driver.wait(until.elementTextMatches(firstBar, /[0-9]/));
 
     // Collect all voting results content
-    voteResults = await driver.findElements(By.css('li.answer > div.content'));
+    voteResults = await driver.findElements(By.css('li.answer'));
 
-    // Checking all currently displayed vote counts
+    // Verifying currently displayed (not hidden) vote counts
     for (let children of voteResults) {
       let barDiv = await children.findElement(By.css('div.bar'));
       let barDivData = await barDiv.getAttribute('data-count');
       let barDivText = await barDiv.getText();
 
+      let dataCorrect = false;
       if (barDivText.includes(barDivData)) {
-        expect(await barDiv.getText()).to.include(await barDiv.getAttribute('data-count'),
-          'displayed vote count did not match attribute data');
+        dataCorrect = true;
       }
       else {
-        expect(await children.findElement(By.css('span')).getText()).to.include(await barDiv.getAttribute('data-count'),
-          'displayed vote count did not match attribute data');
+        let classAttr = await children.getAttribute('class');
+        if (classAttr.includes('hidden')) {
+          // Not testing hidden
+          dataCorrect = true;
+          break;
+        }
+        let spanText = await children.findElement(By.css('span.count')).getText();
+        if (spanText.includes(barDivData)) {
+          dataCorrect = true;
+        }
       }
+
+      expect(dataCorrect, 'one ore more displayed vote counts did not match attribute data').to.be.true;
     }
+
+    await voteResults[0].findElement(By.css('li.answer > div.content > div.bar')).click();
 
     sleepEnabled ? await sleep(sleepTime) : '';
   });
 
 
-  this.Then(/^values in the chart should change from number of votes to percentage or vice versa$/, async function () {
+  this.Then(/^values in the chart should change from number of votes to percentage$/, async function () {
 
-    await voteResults[0].findElement(By.css('li.answer > div.content > div.bar')).click();
-
-    // Checking all currently displayed percent votes per choice
+    // Verifying currently displayed (not hidden) percent votes per choice
     for (let children of voteResults) {
-
       let barDiv = await children.findElement(By.css('div.bar'));
       let barDivDataPct = await barDiv.getAttribute('data-pct');
       let barDivText = await barDiv.getText();
 
+      let dataCorrect = false;
       if (barDivText.includes(barDivDataPct)) {
-        expect(await barDiv.getText()).to.include(await barDiv.getAttribute('data-pct'),
-          'displayed vote percentage did not match attribute data');
+        dataCorrect = true;
       }
       else {
-        expect(await children.findElement(By.css('span')).getText()).to.include(await barDiv.getAttribute('data-count'),
-          'displayed vote percentage did not match attribute data');
+        let classAttr = await children.getAttribute('class');
+        if (classAttr.includes('hidden')) {
+          // Not testing hidden
+          dataCorrect = true;
+          break;
+        }
+        let spanText = await children.findElement(By.css('span.count')).getText();
+        if (spanText.includes(barDivDataPct)) {
+          dataCorrect = true;
+        }
       }
 
+      expect(dataCorrect, 'one ore more displayed vote counts did not match attribute data').to.be.true;
     }
 
     sleepEnabled ? await sleep(sleepTime) : '';
@@ -158,19 +176,6 @@ module.exports = function () {
     //let today = new Date();
     //let headLineStr = 'Birth Month Day of 0' + (parseInt(today.getMonth()) + 1) + '-' + today.getDate();
     let headLineStr = 'Birth Month Day of';
-
-    expect(bornTodayPageHeadline).to.include(headLineStr,
-      'headline on target page did not contain "' + headLineStr + '"');
-
-    sleepEnabled ? await sleep(sleepTime) : '';
-  });
-
-
-  this.When(/^the born today list is sorted by "([^"]*)" descending$/, async function (arg1) {
-
-    let bornTodayPageHeadline = await driver.wait(until.elementLocated(By.css('#main > div.article > h1.header')), 10000).getText();
-
-    let headLineStr = 'Popularity Ascending';
 
     expect(bornTodayPageHeadline).to.include(headLineStr,
       'headline on target page did not contain "' + headLineStr + '"');
@@ -249,7 +254,8 @@ module.exports = function () {
 
     let themeWidgetLinks = await pageThemeWidget.findElements(By.css('a'));
 
-    let ranIndex = Math.floor(Math.random() * themeWidgetLinks.length);
+    // Minus one length since we dont want to click the last link (Browse/Search by keyword) in widget
+    let ranIndex = Math.floor(Math.random() * themeWidgetLinks.length - 1);
     clickedTheme = await themeWidgetLinks[ranIndex].getText();
     // sendKeys on this webelement list item stops working when running all scenarios
 
@@ -296,6 +302,84 @@ module.exports = function () {
   /* --------------------------------------------------------------------------------------- */
   /* 6.4 Scenario: Browsing and clicking movies listed in Fan Favorite scroller on startpage */
   /* --------------------------------------------------------------------------------------- */
+
+  let posterToClick;
+  let scrollerLinks = [];
+
+  this.Given(/^I click the first and the last movie \(from left to right\) in the "([^"]*)" scroller$/, async function (value) {
+
+    let fanFavorites = await driver.wait(until.elementLocated(By.css('div.fan-picks')), 10000);
+    let scrollerButtonR = await fanFavorites.findElement(By.css('.ipc-pager--right'));
+
+    // Clicking to the last poster of scroller
+    while (true) {
+      let buttonCss = await scrollerButtonR.getAttribute('class');
+      if (!buttonCss.includes('visible')) { break; }
+      await scrollerButtonR.click();
+      await sleep(2500);
+    }
+
+    // All scroller <a> tags actually seem "unfindable" if not scrolled through entire scroller 
+    let scrollerPosters = await fanFavorites.findElements(By.css('div.ipc-poster-card'));
+
+    for (let poster of scrollerPosters) {
+      let links = await poster.findElements(By.css('a[href*="/title/"][aria-label]'));
+
+      // Non dynamic. Im a lazy coder so expecting each poster to contain given amount of links
+      expect(links.length).to.equal(2,
+        'expected two similar links under every poster item in the' + value + ' scroller');
+
+      let url1 = await links[0].getAttribute('href');
+      let url2 = await links[1].getAttribute('href');
+      let title1 = await links[0].getAttribute('aria-label');
+      let title2 = await links[1].getAttribute('aria-label');
+
+      // Will only test click on first url of each poster but checking both url on all posters for mismatch
+      // Was initially going to test click on every poster in scroller, but takes too damn long without opening new tabs!
+      expect(url1).to.equal(url2, 'url mismatch between the two links under a poster item in the' + value + ' scroller');
+      expect(title1).to.equal(title2, 'label mismatch between the two links under a poster item in the' + value + ' scroller');;
+
+      scrollerLinks.push({
+        title1: title1,
+        url1: url1,
+        targetPageHeadline: ''
+      })
+
+      if (scrollerPosters.indexOf(poster) === scrollerPosters.length - 1) {
+        posterToClick = links[0];
+      }
+    }
+
+    // Click last poster in scroller
+    await posterToClick.click();
+    scrollerLinks[scrollerLinks.length - 1].targetPageHeadline = await driver.wait(until.elementLocated(By.css('div.title_wrapper > h1')), 10000).getText();
+
+    await driver.navigate().back();
+
+    // Fetching WebElements again! Dont know if they are "stale" at this point
+    fanFavorites = await driver.wait(until.elementLocated(By.css('div.fan-picks')), 10000);
+    scrollerPosters = await fanFavorites.findElements(By.css('div.ipc-poster-card'));
+
+    for (let poster of scrollerPosters) {
+      let links = await poster.findElements(By.css('a[href*="/title/"][aria-label]'));
+      posterToClick = links[0];
+      break;
+    }
+
+    // Click first poster in scroller
+    await posterToClick.click();
+    scrollerLinks[0].targetPageHeadline = await driver.wait(until.elementLocated(By.css('div.title_wrapper > h1')), 10000).getText();
+
+  });
+
+
+  this.Then(/^those movies summary pages should load$/, function () {
+    expect(scrollerLinks[0].targetPageHeadline).to.include(scrollerLinks[0].title1,
+      'clicked movie poster in scroller didnt match page loaded');
+    expect(scrollerLinks[scrollerLinks.length - 1].targetPageHeadline).to.include(scrollerLinks[scrollerLinks.length - 1].title1,
+      'clicked movie poster in scroller didnt match page loaded');
+  });
+
 
   /* -------------------------------------------- */
   /* 6.5 Scenario: Finding a years Oscars Winners */
@@ -380,5 +464,24 @@ module.exports = function () {
     expect(rankedTop).to.equal(movie, 'Could not find ' + movie + ' on the result');
 
   });
+
+  
+  /* ----------------------------------------------------- */
+  /* 6.8 Scenario: Navigate to movies by genre ----------- */
+  /* ----------------------------------------------------- */
+
+  this.When(/^I click on the "([^"]*)" Genre$/, async function (genre) {
+
+    await driver.wait(until.elementLocated(By.css(`img[title="${genre}"]`))).click();
+
+  });
+
+  this.Then(/^I should be browsing a list of "([^"]*)" movies$/, async function (genre) {
+   
+    let titleText = await driver.wait(until.elementLocated(By.css('.article > h1'))).getText();
+    expect(titleText).to.include(genre, "You're not browsing the right genre")
+
+  });
+
 
 }

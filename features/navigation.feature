@@ -6,13 +6,13 @@ Feature: Navigation
     Given that I am on the IMDB site
 
   # 6.1
-  Scenario: Looking at a poll result without voting and changing between votes and percentage
+  Scenario: Looking at a poll result without voting and changing between votes to percentage
     Given I have clicked on the "main menu"
     And have clicked "Polls" under Community
     And have clicked on any listed poll
     And have clicked "See results without voting" on poll page
     When clicking on any of the bars in the voting results chart
-    Then values in the chart should change from number of votes to percentage or vice versa
+    Then values in the chart should change from number of votes to percentage
 
   # 6.2
   Scenario: Browsing same actor from "Born Today" scroller on start page and via "Born Today" in main menu
@@ -34,8 +34,7 @@ Feature: Navigation
 
   # 6.4
   Scenario: Browsing and clicking movies listed in Fan Favorite scroller on startpage
-    Given I am on the start page
-    And have clicked movie number 1 through 30 (from left to right) in the "Fav Favorite" scroller
+    Given I click the first and the last movie (from left to right) in the "Fav favorites" scroller
     Then those movies summary pages should load
 
   # 6.5
@@ -61,3 +60,10 @@ Feature: Navigation
     And I clicked on "Top Rated Movies"
     And I clicked on "Lowest Rated Movies" on IMDb Charts menu
     Then I should find the lowest rated movie "Disaster Movie" at rank number 1
+
+  # 6.8
+  Scenario: Navigate to movies by genre
+    When I have clicked on the "main menu"
+    And I click on "Browse Movies by Genre"
+    And I click on the "Sci-Fi" Genre
+    Then I should be browsing a list of "Sci-Fi" movies

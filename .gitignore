@@ -12,3 +12,4 @@ features/slask.feature
 step-definitions/slask.js
 credentials.json
 slask.js
+step-definitions/credentials_test.json
