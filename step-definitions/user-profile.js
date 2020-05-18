@@ -13,6 +13,7 @@ module.exports = function () {
   // --------------------------------------------------------------------------------------------------------------------------------- //
 
   let oldUserID;
+  let newName;
 
   this.When(/^clicked on "([^"]*)" besides your User id$/, async function (linkText) {
 
@@ -26,10 +27,10 @@ module.exports = function () {
   this.When(/^you enter a new user ID in the input field$/, async function () {
 
     let nameInput = await driver.wait(until.elementLocated(By.css(".auth-input--input")));
-
+    newName = "AWESOMEGUY" + Math.random().toString(36).slice(-10);
     // this ternery changes your username to a different one of two
     nameInput.clear();
-    nameInput.sendKeys("AWESOMEGUYadfjasdfjasghlplfjvnen");
+    nameInput.sendKeys(newName);
     await sleep(2000)
 
   });
@@ -43,7 +44,7 @@ module.exports = function () {
   this.Then(/^your user ID should be a new user ID$/, async function () {
 
     let endName = await driver.wait(until.elementLocated(By.css('.auth-input-row'))).getText();
-    expect(endName).to.include("AWESOMEGUYadfjasdfjasghlplfjvnen");
+    expect(endName).to.include(newName);
 
     // after this we set the username back to the original so the test works on multiple accounts
     await driver.wait(until.elementLocated(By.linkText("Edit"))).click();

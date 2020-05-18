@@ -5,7 +5,7 @@ let { $, sleep } = require('./funcs');
 module.exports = function () {
 
   let sleepEnabled = false;
-  let sleepTime = 3000;
+  let sleepTime = 0;
 
   /* ----------------------------------------------------------------------------------------------- */
   /* 6.1 Scenario: Looking at a poll result without voting and changing between votes to percentage  */
