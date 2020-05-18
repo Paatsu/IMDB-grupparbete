@@ -205,7 +205,7 @@ module.exports = function () {
   });
 
 
-  this.Given(/^clicked the button "([^"]*)" and signing out$/, async function () {
+  this.Given(/^clicked the button "([^"]*)" and signing out$/, async function (arg1) {
 
     let loginSecDoneButton = await driver.wait(until.elementLocated(By.css('a#auth-cnep-done-button')), 10000,
       'done button was not found');
