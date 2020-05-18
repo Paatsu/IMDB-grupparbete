@@ -11,10 +11,12 @@ Feature: Changing User profile and password settings
   # 7.1
   Scenario: Change your user ID
     When clicked on "Edit profile"
-    And clicked on "Edit" besides your "User id"
-    And logged in to your acccount again
-    Then input your new user ID
-    And clicked the button "Save Changes"
+    And clicked on "Edit" besides your User id
+    And you enter a new user ID in the input field
+    And clicked the Save Changes button
+    And you are on "Account settings"
+    And clicked on "Edit profile"
+    Then your user ID should be a new user ID
 
   # 7.2
   Scenario: Adding text to your bio
