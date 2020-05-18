@@ -26,15 +26,14 @@ Feature: Browsing
 
   # 3.3
   Scenario: navigating and clicking through
-    Given that you om IMDB homepage
-    When Start to type your When step here Click on the drop-down menu "menu"
-    Then click "Celebrity News" 
-    Then click on the first article. (5)
+    Given I have clicked on the "main menu"
+    And i click on "Celebrity News"
+    And i click on the first "article"
 
   # 3.4
   Scenario: navigating to Top Rated Indian Movies
-    Given that i am on the IMDB homepage
-    And click Open up the dropdown
-    And click on "india movie spotlight"
-    Then go choice "Top Rated Indian Movies" 
-    Then that click the second one
+    Given I have clicked on the "main menu"
+    When I click on "India TV Spotlight"
+    And I click on "Top Rated Indian Movies"
+    And I click the first indian movie
+    Then i Am on the page of the Top Rated Indian Movie.
