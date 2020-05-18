@@ -110,6 +110,7 @@ module.exports = function () {
     // Have to input slowly since search items becomes stale everytime search is performed by autosuggestion
     for (let char of [...value1]) {
       await name1Field.sendKeys(char);
+      // Need this delay
       await sleep(500);
     }
 

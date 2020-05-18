@@ -316,6 +316,7 @@ module.exports = function () {
       let buttonCss = await scrollerButtonR.getAttribute('class');
       if (!buttonCss.includes('visible')) { break; }
       await scrollerButtonR.click();
+      // Need this delay
       await sleep(2500);
     }
 
@@ -465,7 +466,7 @@ module.exports = function () {
 
   });
 
-  
+
   /* ----------------------------------------------------- */
   /* 6.8 Scenario: Navigate to movies by genre ----------- */
   /* ----------------------------------------------------- */
@@ -477,7 +478,7 @@ module.exports = function () {
   });
 
   this.Then(/^I should be browsing a list of "([^"]*)" movies$/, async function (genre) {
-   
+
     let titleText = await driver.wait(until.elementLocated(By.css('.article > h1'))).getText();
     expect(titleText).to.include(genre, "You're not browsing the right genre")
 
