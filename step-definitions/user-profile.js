@@ -6,6 +6,7 @@ module.exports = function () {
 
   let loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
 
+  /*
   this.Given(/^you are on "([^"]*)"$/, async function (linkText) {
 
     let accountButton = await driver.wait(until.elementLocated(By.css('.navbar__user-menu-toggle__button'))).click();
@@ -14,7 +15,7 @@ module.exports = function () {
     expect(accountSettingsButton, 'Could not find the Account settings link');
 
   });
-
+*/
   this.When(/^clicked on "([^"]*)"$/, async function (linkText) {
 
     let accountSettingsButton = await driver.findElement(By.linkText(linkText)).click();

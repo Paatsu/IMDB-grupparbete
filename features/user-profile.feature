@@ -24,9 +24,9 @@ Feature: Changing User profile and password settings
 
   # 7.3
   Scenario: Change your password
-    When clicked on "Login and security"
-    And clicked "Edit" besides "Password"
-    Then input your "Current password"
-    And input your "New password"
-    And reenter your "New password"
-    And clicked the button "Save changes"
+    When clicked on "Login and security" under Account Settings
+    And on the Login & security page clicked "Edit" besides "Password"
+    Then input your "Current password" (current password)
+    And input a "New password" (new password)
+    And reenter your "New password" (new password)
+    And clicked the button "Save changes" to save new password
