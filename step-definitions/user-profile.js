@@ -90,7 +90,6 @@ module.exports = function () {
     let accountSettingsButton = await driver.findElement(By.linkText('Edit profile')).click();
     expect(accountSettingsButton, 'Could not find the Edit profile link');
     let textfield = await driver.wait(until.elementLocated(By.css('textarea.multiline')));
-    await sleep(3000);
     let textToVerify = await textfield.getText();
     expect(textToVerify, 'Text did not match in Bio').to.equal(loremIpsum);
     await textfield.clear();
