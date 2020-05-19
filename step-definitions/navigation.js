@@ -472,7 +472,11 @@ module.exports = function () {
 
   this.When(/^I click on the "([^"]*)" Genre$/, async function (genre) {
 
-    await driver.wait(until.elementLocated(By.css(`img[title="${genre}"]`))).click();
+    let genreLink = await driver.wait(until.elementLocated(By.css(`img[title="${genre}"]`)), 5000);
+    // DON'T REMOVE THIS SLEEP
+    // WE'RE NOT SUPPOSED TO USE THEM BUT WE HAVE TO HERE
+    await sleep(3000);
+    await genreLink.click();
 
   });
 
