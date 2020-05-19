@@ -5,7 +5,7 @@ let { $, sleep } = require('./funcs');
 module.exports = function () {
 
   let sleepEnabled = false;
-  let sleepTime = 3000;
+  let sleepTime = 0;
 
   /* ----------------------------------------------------------------------------------------------- */
   /* 6.1 Scenario: Looking at a poll result without voting and changing between votes to percentage  */
@@ -16,9 +16,10 @@ module.exports = function () {
 
   this.Given(/^have clicked "([^"]*)" under Community$/, async function (value) {
 
-    let pollsLink = await driver.wait(until.elementLocated(By.linkText(value)), 10000);
+    let pollsLink = await driver.wait(until.elementLocated(By.linkText(value)), 10000,
+      value + ' link was not found');
 
-    await pollsLink.sendKeys(Key.RETURN);
+    await pollsLink.click();
 
     let pollsPageHeadline = await driver.wait(until.elementLocated(By.css('div.poll.homepage > h1')), 10000).getText();
 
@@ -31,7 +32,8 @@ module.exports = function () {
 
   this.Given(/^have clicked on any listed poll$/, async function () {
 
-    let pollLink = await driver.wait(until.elementLocated(By.css('.poll .teaser > a')), 10000);
+    let pollLink = await driver.wait(until.elementLocated(By.css('.poll .teaser > a')), 10000,
+      'no polls (links to) was found');
 
     selectedPollName = await pollLink.getText();
 
@@ -48,12 +50,10 @@ module.exports = function () {
 
   this.Given(/^have clicked "([^"]*)" on poll page$/, async function (value) {
 
-    let noVoteLink = await driver.wait(until.elementLocated(By.css('.article > .results > a[href*="poll"]')), 10000);
-
-    expect(await noVoteLink.getText()).to.equal(value,
+    let noVoteLink = await driver.wait(until.elementLocated(By.css('.article > .results > a[href*="poll"]')), 10000,
       'the link "' + value + '" was not found');
 
-    await noVoteLink.sendKeys(Key.RETURN);
+    await noVoteLink.click();
 
     sleepEnabled ? await sleep(sleepTime) : '';
   });
@@ -62,8 +62,10 @@ module.exports = function () {
   this.When(/^clicking on any of the bars in the voting results chart$/, async function () {
 
     // wait for animation to add a voting number
-    let firstBar = await driver.wait(until.elementLocated(By.css('li.answer > div.content > div.bar')), 10000);
-    await driver.wait(until.elementTextMatches(firstBar, /[0-9]/));
+    let firstBar = await driver.wait(until.elementLocated(By.css('li.answer > div.content > div.bar')), 25000,
+      'voting results page did not load correctly');
+    await driver.wait(until.elementTextMatches(firstBar, /[0-9]/), 25000,
+      'missing voting numbers after animation');
 
     // Collect all voting results content
     voteResults = await driver.findElements(By.css('li.answer'));
@@ -138,9 +140,10 @@ module.exports = function () {
 
   let clickedActor = { scrollerIndex: '', name: '', url: '' };
 
-  this.Given(/^I have clicked on any actor listed in the "([^"]*)" scroller on the start page$/, async function (arg1) {
+  this.Given(/^I have clicked on any actor listed in the "([^"]*)" scroller on the start page$/, async function (value) {
 
-    let bornTodayScroller = await driver.wait(until.elementLocated(By.css('div.born-today')), 25000);
+    let bornTodayScroller = await driver.wait(until.elementLocated(By.css('div.born-today')), 25000,
+      value + ' scroller did not load or couldnt be found');
     let actorsInScroller = await bornTodayScroller.findElements(By.css('a[href*="/name/"][aria-label*=" "]'));
 
     clickedActor.scrollerIndex = Math.floor((Math.random() * actorsInScroller.length) + 1);
@@ -186,7 +189,8 @@ module.exports = function () {
 
   this.Then(/^that actor should be listed in the same order as in the scroller \(from left to right\) on the start page$/, async function () {
 
-    let bornTodayListing = await driver.wait(until.elementLocated(By.css('div.lister-list')), 10000);
+    let bornTodayListing = await driver.wait(until.elementLocated(By.css('div.lister-list')), 10000,
+      'born today listing was not found');
     let bornTodayLinks = await bornTodayListing.findElements(By.css('h3.lister-item-header > a[href*="/name/"]'));
 
     let linkUrl = await bornTodayLinks[clickedActor.scrollerIndex].getAttribute('href');
@@ -204,7 +208,8 @@ module.exports = function () {
 
     await driver.wait(until.elementLocated(By.linkText(clickedActor.name)), 10000).click();
 
-    let actorPageHeadline = await driver.wait(until.elementLocated(By.css('h1.header > span.itemprop')), 10000).getText();
+    let actorPageHeadline = await driver.wait(until.elementLocated(By.css('h1.header > span.itemprop')), 10000,
+      'headline was not found').getText();
 
     expect(actorPageHeadline).to.include(clickedActor.name,
       'headline on target page did not contain "' + clickedActor.name + '"');
@@ -221,7 +226,8 @@ module.exports = function () {
 
   this.Given(/^have clicked "([^"]*)" under TV Shows$/, async function (value) {
 
-    let tvShowsLink = await driver.wait(until.elementLocated(By.linkText(value)), 10000);
+    let tvShowsLink = await driver.wait(until.elementLocated(By.linkText(value)), 10000,
+      value + ' link was not found');
 
     await tvShowsLink.sendKeys(Key.RETURN);
 
@@ -231,7 +237,8 @@ module.exports = function () {
 
   this.Given(/^have clicked a theme under "([^"]*)"$/, async function (value) {
 
-    await driver.wait(until.elementLocated(By.css('.ab_widget')), 10000);
+    await driver.wait(until.elementLocated(By.css('.ab_widget')), 10000,
+      'theme widget was not found on page');
 
     // Collect widgets sections
     let pageWidgets = await driver.findElements(By.css('.ab_widget'));
@@ -257,11 +264,10 @@ module.exports = function () {
     // Minus one length since we dont want to click the last link (Browse/Search by keyword) in widget
     let ranIndex = Math.floor(Math.random() * themeWidgetLinks.length - 1);
     clickedTheme = await themeWidgetLinks[ranIndex].getText();
-    // sendKeys on this webelement list item stops working when running all scenarios
 
+    // sendKeys/click on this webelement list item stops working when running all scenarios
     // Need this delay. Do not know why click below doesnt register
     await sleep(3000);
-
     await themeWidgetLinks[ranIndex].sendKeys(Key.RETURN);
     //await driver.findElement(By.linkText(clickedTheme)).click();
 
@@ -274,7 +280,8 @@ module.exports = function () {
     // IMDb replaces "-" with "space" in h1
     let newValue = value.replace('*clicked theme*', clickedTheme.split('-').join(' '));
 
-    let pageHeadline = await driver.wait(until.elementLocated(By.css('#main > div.article > h1.header')), 25000).getText();
+    let pageHeadline = await driver.wait(until.elementLocated(By.css('#main > div.article > h1.header')), 25000,
+      'page headline was not found').getText();
 
     // Comparing to all lower cases
     expect(pageHeadline.toLowerCase()).to.include(newValue.toLowerCase(),
@@ -287,11 +294,8 @@ module.exports = function () {
   this.Then(/^a "([^"]*)" corresponding to selected theme should be checked in the "([^"]*)" options \(filter\) on that page$/, async function (arg1, arg2) {
 
     let optionName = clickedTheme.split(' ').join('-').toLowerCase();
-    let option = await driver.wait(until.elementLocated(By.css('input[name="' + optionName + '"]')), 25000)
-
-    // Dont need to check this... driver.wait(until...) will cause timeout if not found anyway
-    // expect(option).to.be.an.instanceOf(WebElement,
-    //  'option checkbox for ' + clickedTheme + ' was not found');
+    let option = await driver.wait(until.elementLocated(By.css('input[name="' + optionName + '"]')), 25000,
+      'option checkbox for ' + clickedTheme + ' was not found')
 
     let checked = await option.getAttribute('checked');
 
@@ -308,7 +312,8 @@ module.exports = function () {
 
   this.Given(/^I click the first and the last movie \(from left to right\) in the "([^"]*)" scroller$/, async function (value) {
 
-    let fanFavorites = await driver.wait(until.elementLocated(By.css('div.fan-picks')), 10000);
+    let fanFavorites = await driver.wait(until.elementLocated(By.css('div.fan-picks')), 10000,
+      value + ' did not load or was not found on page');
     let scrollerButtonR = await fanFavorites.findElement(By.css('.ipc-pager--right'));
 
     // Clicking to the last poster of scroller
@@ -316,6 +321,7 @@ module.exports = function () {
       let buttonCss = await scrollerButtonR.getAttribute('class');
       if (!buttonCss.includes('visible')) { break; }
       await scrollerButtonR.click();
+      // Need this delay
       await sleep(2500);
     }
 
@@ -352,12 +358,14 @@ module.exports = function () {
 
     // Click last poster in scroller
     await posterToClick.click();
-    scrollerLinks[scrollerLinks.length - 1].targetPageHeadline = await driver.wait(until.elementLocated(By.css('div.title_wrapper > h1')), 10000).getText();
+    scrollerLinks[scrollerLinks.length - 1].targetPageHeadline = await driver.wait(until.elementLocated(By.css('div.title_wrapper > h1')), 10000,
+      'expected a headline on target page when clicking last poster in ' + value + ' scroller').getText();
 
     await driver.navigate().back();
 
     // Fetching WebElements again! Dont know if they are "stale" at this point
-    fanFavorites = await driver.wait(until.elementLocated(By.css('div.fan-picks')), 10000);
+    fanFavorites = await driver.wait(until.elementLocated(By.css('div.fan-picks')), 10000,
+      value + ' did not load or was not found on page');
     scrollerPosters = await fanFavorites.findElements(By.css('div.ipc-poster-card'));
 
     for (let poster of scrollerPosters) {
@@ -368,8 +376,8 @@ module.exports = function () {
 
     // Click first poster in scroller
     await posterToClick.click();
-    scrollerLinks[0].targetPageHeadline = await driver.wait(until.elementLocated(By.css('div.title_wrapper > h1')), 10000).getText();
-
+    scrollerLinks[0].targetPageHeadline = await driver.wait(until.elementLocated(By.css('div.title_wrapper > h1')), 10000,
+      'expected a headline on target page when clicking last poster in ' + value + ' scroller').getText();
   });
 
 
@@ -465,7 +473,7 @@ module.exports = function () {
 
   });
 
-  
+
   /* ----------------------------------------------------- */
   /* 6.8 Scenario: Navigate to movies by genre ----------- */
   /* ----------------------------------------------------- */
@@ -481,7 +489,7 @@ module.exports = function () {
   });
 
   this.Then(/^I should be browsing a list of "([^"]*)" movies$/, async function (genre) {
-   
+
     let titleText = await driver.wait(until.elementLocated(By.css('.article > h1'))).getText();
     expect(titleText).to.include(genre, "You're not browsing the right genre")
 
