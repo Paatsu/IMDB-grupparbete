@@ -8,11 +8,7 @@ module.exports = function () {
 
   this.Then(/^click the button "([^"]*)"$/, async function (button) {
 
-    await driver.wait(until.elementLocated(By.css('.wl-ribbon')));
-    let ratingButton = await $('.star-rating-button');
-    expect(ratingButton, 'Could not find the button' + button + ' on the site');
-    let h1focus = await $('.title_wrapper h1');
-    await h1focus.click(); // focus on something before clicking
+    let ratingButton = await driver.wait(until.elementLocated(By.css('.star-rating-button')), 10000, 'Could not find the button "' + button + '" on the site');
     await ratingButton.click();
 
     await sleep(sleepTime);
