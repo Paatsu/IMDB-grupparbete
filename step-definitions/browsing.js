@@ -3,6 +3,9 @@ let { $, sleep } = require('./funcs');
 module.exports = function () {
   let firstMovie;
 
+  let selectedPollName;
+  let voteResults;
+
 
 
   // Scenario: Finding all actors born the same date as an actor/actress
@@ -30,10 +33,36 @@ module.exports = function () {
 
     await sleep(sleepTime);
 
+    this.Given
+
+
+  });
+  //Scenario navigating and clicking through
+
+
+  this.When(/^i click on "([^"]*)" under Celebs$/, async function (value) {
+
+    //let = await driver.wait(until.elementLocated(By.linkText(value)), 10000);
+
+
+
+    let CelebrityNews = await driver.wait(until.elementLocated(By.css("ipc-list-item__text")), 25000);
+    let actorsInScroller = await bornTodayScroller.findElements(By.css('class="_1K0S44SUv8s7pXTI-caWlb sc-fjdhpX emeIFn" "]'));
+
+
+    await CelebrityNews.sendKeys(Key.click);
+    //await actorsInScroller[clickedCele.scrollerIndex].click();
+
   });
 
+  this.Then(/^I click the first "([^"]*)"$/, async function () {
+
+    firstArticle = await driver.wait(until.elementLocated(By.css('class="_news - article__header - detail ipl - inline - list'))).getText();
+    await driver.wait(until.elementLocated(By.linkText(firstArticle))).click();
 
 
+
+  });
 
   //Scenario Find Indian top rated movie 
 
@@ -49,7 +78,6 @@ module.exports = function () {
     assert.include(pageTitle, firstMovie, "You're not browsing the movie you clicked on's page");
 
   });
-
 
 
 

@@ -27,9 +27,10 @@ Feature: Browsing
   # 3.3
   Scenario: navigating and clicking through
     Given I have clicked on the "main menu"
-    And i click on "Celebrity News"
-    And i click on the first "article"
-
+    And have clicked "Celebrity News" under Celebs
+    #And i click on "Celebrity News"
+    And i click on the first
+  #"Article"
   # 3.4
   Scenario: navigating to Top Rated Indian Movies
     Given I have clicked on the "main menu"
