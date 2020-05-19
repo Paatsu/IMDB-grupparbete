@@ -40,25 +40,25 @@ module.exports = function () {
   //Scenario navigating and clicking through
 
 
-  this.When(/^i click on "([^"]*)" under Celebs$/, async function (value) {
+  this.Given(/^I click on "([^"]*)" \(Celebrity News\)$/, async function (value) {
 
-    //let = await driver.wait(until.elementLocated(By.linkText(value)), 10000);
-
-
-
-    let CelebrityNews = await driver.wait(until.elementLocated(By.css("ipc-list-item__text")), 25000);
-    let actorsInScroller = await bornTodayScroller.findElements(By.css('class="_1K0S44SUv8s7pXTI-caWlb sc-fjdhpX emeIFn" "]'));
+    await driver.wait(until.elementLocated(By.linkText(value)), 10000);
 
 
-    await CelebrityNews.sendKeys(Key.click);
+    // fixa denna
+    let CelebrityNews = await driver.wait(until.elementLocated(By.css(".ipc-list-item__text")), 25000);
+    //let actorsInScroller = await bornTodayScroller.findElements(By.css('class="_1K0S44SUv8s7pXTI-caWlb sc-fjdhpX emeIFn" "]'));
+
+
+    await CelebrityNews.click();
     //await actorsInScroller[clickedCele.scrollerIndex].click();
 
   });
 
-  this.Then(/^I click the first "([^"]*)"$/, async function () {
+  this.Given(/^I clicked the first Article$/, async function () {
 
-    firstArticle = await driver.wait(until.elementLocated(By.css('class="_news - article__header - detail ipl - inline - list'))).getText();
-    await driver.wait(until.elementLocated(By.linkText(firstArticle))).click();
+    let firstArticle = await driver.wait(until.elementLocated(By.css('section#news-article-list > article > header h2 > a')));
+    await firstArticle.click();
 
 
 
