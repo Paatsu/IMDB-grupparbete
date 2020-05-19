@@ -39,31 +39,31 @@ module.exports = function () {
   });
   //Scenario navigating and clicking through
 
-
-  this.Given(/^I click on "([^"]*)" \(Celebrity News\)$/, async function (value) {
-
-    await driver.wait(until.elementLocated(By.linkText(value)), 10000);
-
-
-    // fixa denna
-    let CelebrityNews = await driver.wait(until.elementLocated(By.css(".ipc-list-item__text")), 25000);
-    //let actorsInScroller = await bornTodayScroller.findElements(By.css('class="_1K0S44SUv8s7pXTI-caWlb sc-fjdhpX emeIFn" "]'));
-
-
-    await CelebrityNews.click();
-    //await actorsInScroller[clickedCele.scrollerIndex].click();
-
-  });
-
-  this.Given(/^I clicked the first Article$/, async function () {
-
-    let firstArticle = await driver.wait(until.elementLocated(By.css('section#news-article-list > article > header h2 > a')));
-    await firstArticle.click();
-
-
-
-  });
-
+  /*
+    this.Given(/^I click on "([^"]*)" \(Celebrity News\)$/, async function (value) {
+  
+      await driver.wait(until.elementLocated(By.linkText(value)), 10000);
+  
+  
+      // fixa denna
+      let CelebrityNews = await driver.wait(until.elementLocated(By.css(".ipc-list-item__text")), 25000);
+      //let actorsInScroller = await bornTodayScroller.findElements(By.css('class="_1K0S44SUv8s7pXTI-caWlb sc-fjdhpX emeIFn" "]'));
+  
+  
+      await CelebrityNews.click();
+      //await actorsInScroller[clickedCele.scrollerIndex].click();
+  
+    });
+  
+    this.Given(/^I clicked the first Article$/, async function () {
+  
+      let firstArticle = await driver.wait(until.elementLocated(By.css('section#news-article-list > article > header h2 > a')));
+      await firstArticle.click();
+  
+  
+  
+    });
+  */
   //Scenario Find Indian top rated movie 
 
 
