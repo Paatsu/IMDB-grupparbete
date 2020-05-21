@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { WebElement, By, Key, until } = require('selenium-webdriver');
-const { username, password, testedPasswords } = require('./credentials.json');
+const { username, password } = require('./credentials.json');
 let { $, sleep } = require('./funcs');
 
 module.exports = function () {
@@ -99,13 +99,55 @@ module.exports = function () {
   });
 
 
-  // --------------------------------------------------------------------------------------------------------------------------------- //
-  // 7.3 Scenario: Change your password ------------------------------------------------------------------------------------------- //
-  // --------------------------------------------------------------------------------------------------------------------------------- //
+  /* -------------------------------------------------------------------------- */
+  /* 7.3 Scenario Outline: Changing password and verifying change by signing in */
+  /* -------------------------------------------------------------------------- */
 
-  // Pass to use. Adjust or use any js to generate
-  //let testPassword = Math.random().toString(36).slice(-10);
-  let testPassword = 'MySuperDuperSafePass3000';
+  let passwordsToUse = {
+    current: password,
+    new: 'MySuperDuperSafePass3000' //or whatever... Math.random().toString(36).slice(-10)
+  }
+
+  this.Given(/^that you are logged in to your IMDB account using "([^"]*)"$/, async function (value) {
+
+    signInMenuButton = await driver.wait(until.elementLocated(By.css('.navbar__user')), 10000,
+      'Could not find the sign in menu button');
+    await signInMenuButton.click();
+
+    let loginImdb = await driver.wait(until.elementLocated(By.css('div.list-group:nth-child(2) > a:nth-child(1)')), 10000,
+      'Could not find the login button auth provider');
+    await loginImdb.click();
+
+    let emailField = await driver.wait(until.elementLocated(By.css('input#ap_email')), 10000,
+      'Could not find login email field');
+    await emailField.sendKeys(username);
+
+    let passwordField = await driver.wait(until.elementLocated(By.css('input#ap_password')), 10000,
+      'Could not find login password field');
+    await passwordField.sendKeys(passwordsToUse[value]);
+
+    let signInButton = await driver.wait(until.elementLocated(By.css('input#signInSubmit')), 10000,
+      'Could not find login email field');
+    await signInButton.click();
+
+    let captchaReq = await driver.findElements(By.css('div#image-captcha-section'));
+    if (captchaReq.length) {
+      // Central command! Central command! We got captchas!
+      passwordField = await driver.wait(until.elementLocated(By.css('input#ap_password')));
+      await passwordField.sendKeys(passwordsToUse[value]); // Refilling password field
+      await driver.findElement(By.css('input#auth-captcha-guess')).sendKeys(Key.CLEAR);
+      while (captchaReq.length) {
+        captchaReq = await driver.findElements(By.css('div#image-captcha-section'));
+        console.log('Please enter Captcha code in webbrowser and click sign in before timeout!');
+        await sleep(2500);
+      }
+    }
+
+    await driver.wait(until.elementLocated(By.css('div[data-menu-id="navUserMenu"]')), 20000,
+      'was not logged on to page using the ' + value + ' password');
+
+    sleepEnabled ? await sleep(sleepTime) : '';
+  });
 
   this.Given(/^clicked on "([^"]*)" under Account Settings$/, async function (value) {
 
@@ -131,7 +173,7 @@ module.exports = function () {
 
     let inputCurrentPassword = await driver.wait(until.elementLocated(By.css('input#ap_password')), 10000,
       value + ' field was not found');
-    await inputCurrentPassword.sendKeys(password);
+    await inputCurrentPassword.sendKeys(passwordsToUse[value]);
 
     sleepEnabled ? await sleep(sleepTime) : '';
   });
@@ -141,7 +183,7 @@ module.exports = function () {
 
     let inputNewPassword = await driver.wait(until.elementLocated(By.css('input#ap_password_new')), 10000,
       value + ' field was not found');
-    await inputNewPassword.sendKeys(testPassword);
+    await inputNewPassword.sendKeys(passwordsToUse[value]);
 
     sleepEnabled ? await sleep(sleepTime) : '';
   });
@@ -151,54 +193,37 @@ module.exports = function () {
 
     let inputReenterPassword = await driver.wait(until.elementLocated(By.css('input#ap_password_new_check')), 10000,
       value + ' field was not found');
-    await inputReenterPassword.sendKeys(testPassword);
+    await inputReenterPassword.sendKeys(passwordsToUse[value]);
 
     sleepEnabled ? await sleep(sleepTime) : '';
   });
 
 
-  this.Given(/^clicked the button "([^"]*)" to save new password$/, async function (value) {
+  this.Given(/^clicked the button "([^"]*)" to save "([^"]*)" \(new password\)$/, async function (value1, value2) {
 
-    // Simple save of last used test pass for backup and log
-    let newPassesArr = [];
-    if (testedPasswords) {
-      newPassesArr = JSON.parse(JSON.stringify(testedPasswords))
+    // Before saving new password. Simple read/save log in case using random generated passes
+    let path = "./step-definitions/credentials_log.json"
+    let log = { passwordHistory: [] };
+    if (fs.existsSync(path)) {
+      log = fs.readFileSync(path, 'utf8', function (error, data) {
+        if (error !== null) { throw error }
+        return data;
+      });
+      log = JSON.parse(log);
+      if (!log.passwordHistory) { throw new Error('bad formatting in JSON file ' + path) }
     }
-    newPassesArr.unshift(testPassword);
-
-    let userData = { username: username, password: password, testedPasswords: newPassesArr }
-    let jsonData = JSON.stringify(userData);
-    let path = "./step-definitions/credentials.json"
+    log.passwordHistory.unshift(passwordsToUse[value2]);
+    let jsonData = JSON.stringify(log);
     fs.writeFile(path, jsonData, 'utf8', function (error) {
-      if (error) { throw new Error('error occured writing to JSON file'); }
+      if (error) { throw error };
     });
 
     let savePasswordButton = await driver.wait(until.elementLocated(By.css('input#cnep_1D_submit_button')), 10000,
-      value + ' button was not found')
+      value1 + ' button was not found')
     await savePasswordButton.click();
 
-    let successMessage = await driver.wait(until.elementLocated(By.css('div#auth-success-message-box')), 10000,
-      'something went wrong when saving new password: ' + testPassword);
-
-    sleepEnabled ? await sleep(sleepTime) : '';
-  });
-
-
-  this.Given(/^immediately changing back to the old Password$/, async function () {
-
-    let editPasswordButton = await driver.wait(until.elementLocated(By.css('input#auth-cnep-edit-password-button')), 10000)
-    await editPasswordButton.click();
-    let inputCurrentPassword = await driver.wait(until.elementLocated(By.css('input#ap_password')), 10000);
-    await inputCurrentPassword.sendKeys(testPassword);
-    let inputNewPassword = await driver.wait(until.elementLocated(By.css('input#ap_password_new')), 10000);
-    await inputNewPassword.sendKeys(password);
-    let inputReenterPassword = await driver.wait(until.elementLocated(By.css('input#ap_password_new_check')), 10000);
-    await inputReenterPassword.sendKeys(password);
-    let savePasswordButton = await driver.wait(until.elementLocated(By.css('input#cnep_1D_submit_button')), 10000);
-    await savePasswordButton.click();
-
-    let successMessage = await driver.wait(until.elementLocated(By.css('div#auth-success-message-box')), 10000,
-      'something went wrong when saving (restoring) original password: ' + password);
+    await driver.wait(until.elementLocated(By.css('div#auth-success-message-box')), 10000,
+      'something went wrong when saving new password: ' + passwordsToUse[value2]);
 
     sleepEnabled ? await sleep(sleepTime) : '';
   });
@@ -225,7 +250,7 @@ module.exports = function () {
   });
 
 
-  this.Then(/^signing in using original password should work just fine$/, async function () {
+  this.Then(/^signing in using "([^"]*)" should work$/, async function (value) {
 
     signInMenuButton = await driver.wait(until.elementLocated(By.css('.navbar__user')), 10000,
       'Could not find the sign in menu button');
@@ -241,14 +266,27 @@ module.exports = function () {
 
     let passwordField = await driver.wait(until.elementLocated(By.css('input#ap_password')), 10000,
       'Could not find login password field');
-    await passwordField.sendKeys(password);
+    await passwordField.sendKeys(passwordsToUse[value]);
 
     let signInButton = await driver.wait(until.elementLocated(By.css('input#signInSubmit')), 10000,
       'Could not find login email field');
     await signInButton.click();
 
-    await driver.wait(until.elementLocated(By.css('div[data-menu-id="navUserMenu"]')), 10000,
-      'was not logged on to page using original password');
+    let captchaReq = await driver.findElements(By.css('div#image-captcha-section'));
+    if (captchaReq.length) {
+      // Central command! Central command! We got captchas!
+      passwordField = await driver.wait(until.elementLocated(By.css('input#ap_password')));
+      await passwordField.sendKeys(passwordsToUse[value]); // Refilling password field
+      await driver.findElement(By.css('input#auth-captcha-guess')).sendKeys(Key.CLEAR);
+      while (captchaReq.length) {
+        captchaReq = await driver.findElements(By.css('div#image-captcha-section'));
+        console.log('Please enter Captcha code in webbrowser and click sign in before timeout!');
+        await sleep(2500);
+      }
+    }
+
+    await driver.wait(until.elementLocated(By.css('div[data-menu-id="navUserMenu"]')), 20000,
+      'was not logged on to page using the ' + value + ' password');
 
     sleepEnabled ? await sleep(sleepTime) : '';
   });

@@ -5,11 +5,11 @@ Feature: Changing User profile and password settings
 
   Background:
     Given that I am on the IMDB site
-    And that you are logged in to your IMDB account
-    And you are on "Account settings"
 
   # 7.1
   Scenario: Change your user ID
+    Given that you are logged in to your IMDB account
+    And you are on "Account settings"
     When clicked on "Edit profile"
     And clicked on "Edit" besides your User id
     And you enter a new user ID in the input field
@@ -20,18 +20,26 @@ Feature: Changing User profile and password settings
 
   # 7.2
   Scenario: Adding text to your bio
+    Given that you are logged in to your IMDB account
+    And you are on "Account settings"
     When clicked on "Edit profile"
     Then input a text to the textfield under "Bio"
     And clicked the button "Save Description"
 
   # 7.3
-  Scenario: Change your password
-    Given clicked on "Login and security" under Account Settings
+  Scenario Outline: Changing password and verifying change by signing in
+    Given that you are logged in to your IMDB account using "<currentpassword>"
+    And you are on "Account settings"
+    And clicked on "Login and security" under Account Settings
     And on the Login & security page clicked "Edit" besides "Password"
-    And input your "Current password" (current password)
-    And input a "New password" (new password)
-    And reenter your "New password" (new password)
-    And clicked the button "Save changes" to save new password
-    And immediately changing back to the old Password
+    And input your "<currentpassword>" (current password)
+    And input a "<newpassword>" (new password)
+    And reenter your "<newpassword>" (new password)
+    And clicked the button "Save changes" to save "<newpassword>" (new password)
     And clicked the button "Done" and signing out
-    Then signing in using original password should work just fine
+    And that I am on the IMDB site
+    Then signing in using "<newpassword>" should work
+    Examples:
+      | newpassword | currentpassword |
+      | new         | current         |
+      | current     | new             |

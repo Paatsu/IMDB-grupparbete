@@ -13,3 +13,7 @@ step-definitions/slask.js
 credentials.json
 slask.js
 step-definitions/credentials_test.json
+features/rikard-test1.feature
+features/rikard-test2.feature
+features/rikard-test3.feature
+step-definitions/credentials_log.json
