@@ -1,8 +1,8 @@
 let { $, sleep } = require('./funcs');
+const { username, password } = require('./credentials.json');
 
 module.exports = function () {
 
-  const { username, password } = require('./credentials.json');
   let sleepTime = 3000;
   let movieTitle;
 

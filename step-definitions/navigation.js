@@ -448,15 +448,17 @@ module.exports = function () {
 
   this.When(/^I clicked on "([^"]*)"$/, async function (linkText) {
 
-    let topRated = await driver.wait(until.elementLocated(By.linkText(linkText)));
-    expect(topRated, 'Could not find the link Top Rated Movies');
+    await driver.wait(until.elementLocated(By.linkText(linkText)));
+    let topRated = await driver.findElement(by.linkText(linkText));
+    expect(topRated, 'Could not find the link "Top Rated Movies"');
     await topRated.click();
 
   });
 
   this.When(/^I clicked on "([^"]*)" on IMDb Charts menu$/, async function (linkText) {
 
-    let lowestRated = await driver.wait(until.elementLocated(By.linkText(linkText)));
+    await driver.wait(until.elementLocated(By.linkText(linkText)));
+    let lowestRated = await driver.findElement(by.linkText(linkText));
     expect(lowestRated, 'Could not find the link Lowest Rated Movies');
     await lowestRated.click();
 

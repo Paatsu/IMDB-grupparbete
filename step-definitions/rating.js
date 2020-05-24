@@ -8,7 +8,9 @@ module.exports = function () {
 
   this.Then(/^click the button "([^"]*)"$/, async function (button) {
 
-    let ratingButton = await driver.wait(until.elementLocated(By.css('.star-rating-button')), 10000, 'Could not find the button "' + button + '" on the site');
+    await driver.wait(until.elementLocated(By.css('.star-rating-button')));
+    let ratingButton = await $('.star-rating-button');
+    expect(ratingButton, 'Could not find the button' + button + ' on the site');
     await ratingButton.click();
 
     await sleep(sleepTime);
@@ -26,7 +28,7 @@ module.exports = function () {
     // Verify we rated the movie 10 of 10
 
     await driver.wait(until.elementLocated(By.css('.star-rating-value')));
-    let ratingChosen = await driver.findElements(by.css('.star-rating-value'));
+    let ratingChosen = await $('.star-rating-value');
     let ratedValue = await ratingChosen[0].getText();
     expect(+ratedValue, 'We rated to movie wrong').to.equal(+rating);
 
