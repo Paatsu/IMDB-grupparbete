@@ -1,11 +1,13 @@
 let { $, sleep } = require('./funcs');
+const { WebElement, By, Key, until } = require('selenium-webdriver');
 
 module.exports = function () {
   let firstMovie;
+  let firstArticle = firstMovie;
 
   let selectedPollName;
   let voteResults;
-
+  let sleeptime = 2000;
 
 
   // Scenario: Finding all actors born the same date as an actor/actress
@@ -39,36 +41,35 @@ module.exports = function () {
   });
   //Scenario navigating and clicking through
 
-  /*
-    this.Given(/^I click on "([^"]*)" \(Celebrity News\)$/, async function (value) {
-  
-      await driver.wait(until.elementLocated(By.linkText(value)), 10000);
-  
-  
-      // fixa denna
-      let CelebrityNews = await driver.wait(until.elementLocated(By.css(".ipc-list-item__text")), 25000);
-      //let actorsInScroller = await bornTodayScroller.findElements(By.css('class="_1K0S44SUv8s7pXTI-caWlb sc-fjdhpX emeIFn" "]'));
-  
-  
-      await CelebrityNews.click();
-      //await actorsInScroller[clickedCele.scrollerIndex].click();
-  
-    });
-  
-    this.Given(/^I clicked the first Article$/, async function () {
-  
-      let firstArticle = await driver.wait(until.elementLocated(By.css('section#news-article-list > article > header h2 > a')));
-      await firstArticle.click();
-  
-  
-  
-    });
-  */
+  this.Given(/^I have clicked on the "([^"]*)"\(main menu\)$/, async function (value) {
+
+    menuButton = await driver.wait(until.elementLocated(By.css(".ipc-button")), 25000, 'link ' + value + ' the main menu was not found');
+    await menuButton.click();
+
+  });
+
+
+  this.Given(/^I click on "([^"]*)" \(Celebrity News\)$/, async function (value) {
+
+    let celebrityNews = await driver.wait(until.elementLocated(By.linkText(value)), 10000, 'link ' + value + ' was not found');
+
+    await celebrityNews.click();
+
+  });
+
+  this.Given(/^I click the first Article "([^"]*)" \(Article\)$/, async function (value) {
+
+    let firstArticle = await driver.wait(until.elementLocated(By.css('section#news-article-list > article > header h2 > a')), 10000,
+      'could not find first article link on page');
+    await firstArticle.click();
+
+  });
+
   //Scenario Find Indian top rated movie 
 
 
   this.Then(/^I click the first indian movie$/, async function () {
-    firstMovie = await driver.wait(until.elementLocated(By.css('.titleColumn > a'))).getText();
+    firstMovie = await driver.wait(until.elementLocated(By.css('.titleColumn > a'))).getText(); ('could not find first indian movie')
     await driver.wait(until.elementLocated(By.linkText(firstMovie))).click();
   });
 

@@ -24,12 +24,11 @@ Feature: Browsing
     And click the movie "American Pie" profile
     And I should find the release date in USA
 
-  # 3.3
-  # Scenario: navigating and clicking through
-  #  Given I have clicked on the "main menu"
-  # And I click on "Celebrity News" (Celebrity News)
-  # And I clicked the first Article
-  #"Article"
+  #3.3
+  Scenario: navigating and clicking through
+    Given I have clicked on the "main menu"(main menu)
+    And I click on "Celebrity News" (Celebrity News)
+    And I click the first Article "Article" (Article)
 
   # 3.4
   Scenario: navigating to Top Rated Indian Movies
